@@ -32,6 +32,9 @@ module.exports = function (app, express) {
   // Route to sign up users
   app.post('/api/users/signup', userController.signup);
 
+  // Route to signout users
+  app.get('/api/users/signout', userController.signout);
+
   // Route to update user preferences and settings
   app.put('/api/users/profile', userController.updateUser);
 
@@ -39,8 +42,8 @@ module.exports = function (app, express) {
   app.post('/api/users/friendRequest', userController.submitFriendRequest);
 
   // Route to handle a friendRequestAction
-
   app.post('/api/users/handleFriendRequestAction', userController.handleFriendRequestAction);
+
 
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler

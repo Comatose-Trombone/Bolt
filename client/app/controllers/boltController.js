@@ -14,22 +14,25 @@ angular.module('bolt.controller', [])
   var checkForFriendRequests = function () {
     Profile.getUser()
     .then(function (user) {
+      console.log('foobar');
       $scope.friendRequests = user.friendRequests;
       var friendIcon = document.getElementsByClassName("friendIcon")[0];
-      if ($scope.friendRequests.length > 0) {
-        // change the color of the icon to green
-        friendIcon.classList.add("activeFriendIcon");
-      } else {
-        // change the color of the icon to white, if it was green
-        if (friendIcon.classList.contains("activeFriendIcon")) {
-          friendIcon.classList.remove("activeFriendIcon");
-        }
+      if ( friendIcon ) {
+        if ( $scope.friendRequests.length > 0 ) {
+          // change the color of the icon to green
+          friendIcon.classList.add("activeFriendIcon");
+        } else {
+          // change the color of the icon to white, if it was green
+          if ( friendIcon.classList.contains("activeFriendIcon" )) {
+            friendIcon.classList.remove("activeFriendIcon");
+          }
+        };
       };
     });
   };
 
   checkForFriendRequests();
-  $interval(function () {
+  var checkFriendRequestsInterval = $interval(function () {
     checkForFriendRequests();
   }, 1500);
 
@@ -64,7 +67,9 @@ angular.module('bolt.controller', [])
     });
   };
 
-
-  // send a PR to the server, using func on profile factory
+  // Stops the interval when you route away from the Profile Page
+  $scope.$on('$destroy', function () {
+    $interval.cancel(checkFriendRequestsInterval);
+  });
 });
 

@@ -7,7 +7,6 @@ var helpers = require('../config/helpers');
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
-var saveUser = Q.nbind(User.save, User);
 
 module.exports = {
 
@@ -27,6 +26,12 @@ module.exports = {
         return user.comparePasswords(password)
         .then(function (foundUser) {
           if (foundUser) {
+            // set online to true
+            user.online = true;
+            user.save(function () {
+              console.log('user', user);
+            } );
+
             var token = jwt.encode(user, 'secret');
             res.json({
               token: token,
@@ -112,6 +117,27 @@ module.exports = {
       findUser({username: user.username})
       .then(function (user) {
         res.json(user);
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
+  },
+
+  signout: function (req, res, next) {
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // change online to false and save
+        user.online = false;
+        user.save(function () {
+          res.send('Logged Out');
+        });
       })
       .catch(function (err) {
         console.error(err);
