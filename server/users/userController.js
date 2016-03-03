@@ -161,7 +161,8 @@ module.exports = {
       }
       // if you are already friends with the person, then respond with a message
       else if ( foundUser.friends.indexOf(username) > -1 ) {
-        res.send('You are already friends with this person');
+        console.log('friends already');
+        res.send('You are already friends with this user');
       }
       // if username exists, add the person's username to the friend request list
       else {
