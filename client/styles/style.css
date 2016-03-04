@@ -351,3 +351,17 @@ body{
 }
 
 
+
+/************ Friend List **************/
+.friendListContainer {
+  width: 23em;
+}
+
+.redBackground {
+  background-color: rgba(255, 125, 110, 0.6) !important;
+}
+
+
+
+
+

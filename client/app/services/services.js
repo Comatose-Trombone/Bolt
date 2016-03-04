@@ -390,7 +390,46 @@ angular.module('bolt.services', [])
     isAuth: isAuth,
     signout: signout
   };
+})
+
+.factory('raceFriends', function($http, $location, $window) {
+  var submitLiveChallenge = function (user, opponent) {
+    return $http({
+      method: 'POST',
+      url: '/api/users/submitLiveChallenge',
+      data: {
+        user: user,
+        opponent: opponent
+      }
+    }).then(function (res) {
+      return res;
+    })
+  };
+
+
+
+  return {
+    submitLiveChallenge: submitLiveChallenge
+  }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

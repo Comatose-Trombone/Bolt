@@ -49,6 +49,18 @@ var UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  challengeList: {
+    type: Array,
+    default: []
+  },
+  currentChallenge: {
+    type: Object,
+    default: {
+      opponent: "",
+      match: false,
+      cancel: false
+    }
+  },
   personalBest: Number, // Personal best in min/mile
   achievements: {
     type: Object,

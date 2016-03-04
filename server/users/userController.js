@@ -5,7 +5,6 @@ var helpers = require('../config/helpers');
 
 // Promisify a few mongoose methods with the `q` promise library
 var findUser = Q.nbind(User.findOne, User);
-var findUsers = Q.nbind(User.find, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
 
@@ -267,7 +266,7 @@ module.exports = {
   },
 
   handleGetFriends: function (req, res, next) {
-    // query user for
+    // find User
     var token = req.headers['x-access-token'];
     if (!token) {
       next(new Error('No token'));
@@ -275,8 +274,6 @@ module.exports = {
       var user = jwt.decode(token, 'secret');
       findUser({username: user.username})
       .then(function (user) {
-        // push key-value pairs into friendsOnline name : online
-        var friendsOnline = [];
         // find the documents for all friends. Return only the username and online status for those friends
         User.find({ username: {$in: user.friends} },
           {
@@ -293,14 +290,38 @@ module.exports = {
         res.send(404);
       });
     }
+  },
+
+  submitLiveChallenge: function (req, res, next) {
+    console.log('submitLiveChallenge');
+    var user = req.body.user;
+    var opponent = req.body.opponent;
+    console.log(user, opponent);
+    //find user and add a challenge
+    findUser({username: user})
+    .then(function (founduser) {
+      // if ( user.challenge.opponent)
+      // console.log('before', founduser.currentChallenge);
+      founduser.challengeList.push(opponent);
+      // console.log('after', founduser.currentChallenge);
+      founduser.save(function(err) {
+        if (err) console.log('err');
+        else {
+          console.log('saved');
+          findUser({username: opponent})
+          .then(function (opponent) {
+            opponent.challengeList.push(user);
+            opponent.save(function() {
+              console.log('done');
+              res.send('challenge submitted');
+            });
+          });
+        }
+      });
+    });
   }
-
-
-
-
-
-
-
+    // .then(function () {
+      //find opponent and add a challenge
 
 };
 
