@@ -3,9 +3,9 @@ angular.module('bolt.friendList', [])
 .controller('friendListController', function ($scope, Profile) {
   $scope.friends = [];
 
-  Profile.getUser()
-  .then(function (user) {
-    $scope.friends = user.friends;
+  Profile.getFriends()
+  .then(function (friends) {
+    $scope.friends = friends.data;
+    console.log($scope.friends);
   });
-
 });

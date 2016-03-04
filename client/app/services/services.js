@@ -249,8 +249,16 @@ angular.module('bolt.services', [])
           newFriend: newFriend
         }
       }).then(function (res) {
-        console.log('res');
         return res;
+      });
+    };
+
+    var getFriends = function () {
+      return $http({
+        method: 'GET',
+        url: '/api/users/handleGetFriends'
+      }).then(function (friends) {
+        return friends;
       });
     };
 
@@ -258,7 +266,8 @@ angular.module('bolt.services', [])
     updateUser: updateUser,
     getUser: getUser,
     sendFriendRequest: sendFriendRequest,
-    handleFriendRequest: handleFriendRequest
+    handleFriendRequest: handleFriendRequest,
+    getFriends: getFriends
   };
 })
 

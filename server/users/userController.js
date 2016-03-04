@@ -5,6 +5,7 @@ var helpers = require('../config/helpers');
 
 // Promisify a few mongoose methods with the `q` promise library
 var findUser = Q.nbind(User.findOne, User);
+var findUsers = Q.nbind(User.find, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
 
@@ -263,6 +264,35 @@ module.exports = {
         };
       };
     });
+  },
+
+  handleGetFriends: function (req, res, next) {
+    // query user for
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // push key-value pairs into friendsOnline name : online
+        var friendsOnline = [];
+        // find the documents for all friends. Return only the username and online status for those friends
+        User.find({ username: {$in: user.friends} },
+          {
+            username: 1,
+            online: 1,
+            _id: 0
+        })
+        .then(function (data) {
+          res.send(data);
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
   }
 
 

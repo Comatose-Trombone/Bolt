@@ -44,6 +44,7 @@ module.exports = function (app, express) {
   // Route to handle a friendRequestAction
   app.post('/api/users/handleFriendRequestAction', userController.handleFriendRequestAction);
 
+  app.get('/api/users/handleGetFriends', userController.handleGetFriends);
 
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler
