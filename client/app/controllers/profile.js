@@ -35,7 +35,11 @@ angular.module('bolt.profile', ['bolt.auth'])
     .then(function (data) {
       console.log(data);
       if ( data === 'User does not exist' || data === 'You have already sent this user a friend request' ) {
+        console.log('works');
         $scope.error = data;
+      } else if ( data.data === 'You are already friends with this user' ) {
+        // for some reason, data is sometimes sent back as an object, rather than a string.
+        $scope.error = data.data;
       } else {
         $scope.toggleFriendInputForm();
       }

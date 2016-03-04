@@ -337,12 +337,20 @@ body{
     border: 2px solid white;
 }
 
-.greenCircle {
+.greenOnlineCircle {
   background-color: green;
   border-radius: 99em;
   width: 0.6em;
   height: 0.6em;
   margin-right: 1em;
+}
+
+.whiteOfflineCircle {
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 99em;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 1em; 
 }
 
 
@@ -381,5 +389,19 @@ body{
 .friendRequestEntry {
   font-size: 1em !important;
 }
+
+
+
+/************ Friend List **************/
+.friendListContainer {
+  width: 23em;
+}
+
+.redBackground {
+  background-color: rgba(255, 125, 110, 0.6) !important;
+}
+
+
+
 
 
