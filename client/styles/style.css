@@ -22,17 +22,16 @@ html, body {
   display: inline;
   float: left;
   height: 100%;
-  width: 10%;
-}
-
-.remaining {
-  display: inline;
-  float: right;
-  height: 100%;
-  width: 90%;
+/*  width: 60%;*/
 }
 
 /************************************************/
+#static-map {
+  display: block;
+  top: 0%;
+  height: 200px;
+  width: 400px;
+}
 
 #map {
   display: block;
@@ -152,16 +151,17 @@ body{
 
 .medalContainerOuter {
   display: block;
-  width: 100%;
-  height: 87vh;
-  margin-top: 5vh;
+  height: 25vh;
+  margin-top: 1vh;
+  float: right;
 }
 
 .medalContainerInner {
   display: block;
   color: white;
-  height: 10vh;
-  margin: 0 auto 4vh auto;
+  height: 5vh;
+  width: 20vh;
+  margin: 0 auto 0 auto;
   font-size: 2em;
   vertical-align: middle;
 }
@@ -194,9 +194,10 @@ body{
 }
 
 .total {
-  font-size: 2em;
+  font-size: 1.5em;
   color: black;
   text-align: center;
+  padding-top: 5px;
 }
 
 .titleMessage {
@@ -295,6 +296,7 @@ body{
   visibility: hidden;
 }
 
+
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
     border: 2px solid white;
     background-color: white;
@@ -312,17 +314,49 @@ body{
   margin-right: 1em;
 }
 
-.identity {
-  color: rgba(237, 65, 42, 0.85);
+
+
+/******** Friend Dropdown ***********/
+.activeFriendIcon {
+  color: rgb(62, 243, 86);
 }
 
 #friendsListDropdown {
   margin-top: 4.4em;
-  width: 50em !important;
+  width: 15em !important;
+}
+
+.smallButton {
+  font-size: 0.85em;
+  text-align: center;
+  display: inline-block;
+  margin-left: 0.5em;
+  padding: 0.2em;
+}
+
+.right:hover {
+  color: rgba(237, 65, 42, 0.85);
 }
 
 .friendRequestContainer {
   margin-top: 2em;
+}
+
+.friendRequestEntryContent {
+  width: 15em;
+}
+
+
+.friendRequestEntry {
+  font-size: 1em !important;
+}
+
+/******** Home Button ***********/
+.bottom-align {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;
 }
 
 
