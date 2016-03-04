@@ -13,6 +13,14 @@ angular.module('bolt.services', [])
   var initialLng;
 
 
+  // Math functions
+  var sqrt = Math.sqrt;
+  var floor = Math.floor;
+  var random = Math.random;
+  var pow2 = function (num) {
+    return Math.pow(num, 2);
+  };
+
   // Create map around the users current location and their destination
   var makeInitialMap = function ($scope, destination) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -96,7 +104,26 @@ angular.module('bolt.services', [])
     };
   };
 
+  // Calculate distance between two coordinates
+  var distBetween = function (loc1, loc2) {
+    return sqrt(pow2(loc1.lat - loc2.lat) + pow2(loc1.lng - loc2.lng));
+  };
+
+  // Calculate the percentage of the total route distance that the user has run
+  var calculatePercentageRouteRun = function ($scope, loc1, loc2) {
+    $scope.distanceRun += distBetween(loc1, loc2);
+    var percentageRun = Math.ceil(($scope.distanceRun / $scope.totalDistance) * 100);
+    return percentageRun;
+  };
+
+  // Updates the current user position, and calculates the percentage of the total route completed.
   var updateCurrentPosition = function ($scope) {
+    if ($scope.userLocation) {
+      var prevLocation = {
+        lat: $scope.userLocation.lat,
+        lng: $scope.userLocation.lng
+      };
+    }
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
       if ($scope) {
@@ -104,6 +131,11 @@ angular.module('bolt.services', [])
           lat: currentLocMarker.position.lat(),
           lng: currentLocMarker.position.lng()
         };
+        if (prevLocation) {
+          $scope.percentComplete = calculatePercentageRouteRun($scope, prevLocation, $scope.userLocation);
+          console.log('prevPosition: ', prevLocation);
+          console.log('userLocation: ', $scope.userLocation);
+        }
       }
     }, function (err) {
       console.error(err);
@@ -120,7 +152,8 @@ angular.module('bolt.services', [])
 
   return {
     makeInitialMap: makeInitialMap,
-    updateCurrentPosition: updateCurrentPosition
+    updateCurrentPosition: updateCurrentPosition,
+    distBetween: distBetween
   };
 
 })
@@ -189,7 +222,6 @@ angular.module('bolt.services', [])
     setInitialMedalGoal: setInitialMedalGoal,
     updateGoalTimes: updateGoalTimes
   };
-
 })
 
 // Update and retrieve user information
@@ -230,20 +262,44 @@ angular.module('bolt.services', [])
           friendUsername: friendUsername
         }
       }).then(function (res) {
-        if ( res.data === 'User does not exist' ) {
-          console.log( 'User does not exist' );
-        } else if ( res.data === 'You have already sent this user a friend request' ) {
-          console.log( 'You have already sent this person a friend request' );
+        if ( res.data === 'User does not exist' || res.data === 'You have already sent this user a friend request') {
+          return res.data;
         } else {
           console.log( 'Friend request made' );
+          return res;
         }
+      });
+    };
+
+    var handleFriendRequest = function (action, self, newFriend) {
+      return $http({
+        method: 'POST',
+        url: '/api/users/handleFriendRequestAction',
+        data: {
+          action: action,
+          self: self,
+          newFriend: newFriend
+        }
+      }).then(function (res) {
+        return res;
+      });
+    };
+
+    var getFriends = function () {
+      return $http({
+        method: 'GET',
+        url: '/api/users/handleGetFriends'
+      }).then(function (friends) {
+        return friends;
       });
     };
 
   return {
     updateUser: updateUser,
     getUser: getUser,
-    sendFriendRequest: sendFriendRequest
+    sendFriendRequest: sendFriendRequest,
+    handleFriendRequest: handleFriendRequest,
+    getFriends: getFriends
   };
 })
 
@@ -262,14 +318,16 @@ angular.module('bolt.services', [])
       });
     },
 
-    updateGame : function (id, field) {
+    // Optional progess argument, hardcoded for handling multiRun progress bar updating
+    updateGame : function (id, field, progress) {
       //field is equal to either user1 or user2
       return $http({
         method: 'POST',
         url: '/api/games/update',
         data: {
           id: id,
-          field: field
+          field: field,
+          progress: progress
         }
       }).then(function (res) {
         return res;
@@ -337,19 +395,26 @@ angular.module('bolt.services', [])
   };
 
   var signout = function () {
-    $window.localStorage.removeItem('username');
-    $window.localStorage.removeItem('first');
-    $window.localStorage.removeItem('last');
-    $window.localStorage.removeItem('firstName');
-    $window.localStorage.removeItem('lastName');
-    $window.localStorage.removeItem('phone');
-    $window.localStorage.removeItem('email');
-    $window.localStorage.removeItem('competitor');
-    $window.localStorage.removeItem('preferredDistance');
-    $window.localStorage.removeItem('runs');
-    $window.localStorage.removeItem('achievements');
-    $window.localStorage.removeItem('com.bolt');
-    $location.path('/signin');
+    $http({
+      method: 'GET',
+      url: '/api/users/signout'
+    })
+    .then(function (data) {
+      console.log('successfully signed out');
+      $window.localStorage.removeItem('username');
+      $window.localStorage.removeItem('first');
+      $window.localStorage.removeItem('last');
+      $window.localStorage.removeItem('firstName');
+      $window.localStorage.removeItem('lastName');
+      $window.localStorage.removeItem('phone');
+      $window.localStorage.removeItem('email');
+      $window.localStorage.removeItem('competitor');
+      $window.localStorage.removeItem('preferredDistance');
+      $window.localStorage.removeItem('runs');
+      $window.localStorage.removeItem('achievements');
+      $window.localStorage.removeItem('com.bolt');
+      $location.path('/signin');
+    });
   };
 
 
@@ -359,4 +424,47 @@ angular.module('bolt.services', [])
     isAuth: isAuth,
     signout: signout
   };
+})
+
+.factory('raceFriends', function($http, $location, $window) {
+  var submitLiveChallenge = function (user, opponent) {
+    return $http({
+      method: 'POST',
+      url: '/api/users/submitLiveChallenge',
+      data: {
+        user: user,
+        opponent: opponent
+      }
+    }).then(function (res) {
+      return res;
+    })
+  };
+
+
+
+  return {
+    submitLiveChallenge: submitLiveChallenge
+  }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

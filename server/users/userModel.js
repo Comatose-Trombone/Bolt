@@ -41,7 +41,26 @@ var UserSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-
+  friends: {
+    type: Array,
+    default: []
+  },
+  online: {
+    type: Boolean,
+    default: false
+  },
+  challengeList: {
+    type: Array,
+    default: []
+  },
+  currentChallenge: {
+    type: Object,
+    default: {
+      opponent: "",
+      match: false,
+      cancel: false
+    }
+  },
   personalBest: Number, // Personal best in min/mile
   achievements: {
     type: Object,
@@ -52,7 +71,8 @@ var UserSchema = new mongoose.Schema({
       'High Five': 0,
       Iron: 0 //experimental
     }
-  }
+  },
+  challenges: Array
 });
 
 UserSchema.methods.comparePasswords = function (candidatePassword) {

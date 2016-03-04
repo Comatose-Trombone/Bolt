@@ -7,7 +7,6 @@ var helpers = require('../config/helpers');
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
-var saveUser = Q.nbind(User.save, User);
 
 module.exports = {
 
@@ -27,6 +26,12 @@ module.exports = {
         return user.comparePasswords(password)
         .then(function (foundUser) {
           if (foundUser) {
+            // set online to true
+            user.online = true;
+            user.save(function () {
+              console.log('user', user);
+            } );
+
             var token = jwt.encode(user, 'secret');
             res.json({
               token: token,
@@ -37,7 +42,8 @@ module.exports = {
               phone: user.phone,
               preferredDistance: user.preferredDistance,
               runs: JSON.stringify(user.runs),
-              achievements: JSON.stringify(user.achievements)
+              achievements: JSON.stringify(user.achievements),
+              friendRequests: user.friendRequests
             });
           } else {
             return next(new Error('No user'));
@@ -119,6 +125,27 @@ module.exports = {
     }
   },
 
+  signout: function (req, res, next) {
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // change online to false and save
+        user.online = false;
+        user.save(function () {
+          res.send('Logged Out');
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
+  },
+
   checkAuth: function (req, res, next) {
     // checking to see if the user is authenticated
     // grab the token in the header is any
@@ -143,15 +170,12 @@ module.exports = {
     }
   },
 
-  handleFriendRequest: function (req, res, next) {
-    console.log('top of handleFriendRequest');
+  submitFriendRequest: function (req, res, next) {
     var username = req.body.username;
     var friendUsername = req.body.friendUsername;
-    console.log(friendUsername);
     // find the user with the given username.
     findUser({username: friendUsername})
     .then(function (foundUser) {
-      console.log('access DB...', foundUser);
       // if the username does not exist, respond with a message
       if ( !foundUser ) {
         console.log('user does not exist');
@@ -159,12 +183,15 @@ module.exports = {
       }
       // if the friend already has a friend request from the user, then respond with a message
       else if ( foundUser.friendRequests.indexOf(username) > -1 ) {
-        console.log(' wait please ');
         res.send('You have already sent this user a friend request');
+      }
+      // if you are already friends with the person, then respond with a message
+      else if ( foundUser.friends.indexOf(username) > -1 ) {
+        console.log('friends already');
+        res.send('You are already friends with this user');
       }
       // if username exists, add the person's username to the friend request list
       else {
-        console.log('handleFriendRequest else statement');
         foundUser.friendRequests.push(username);
         foundUser.save(function (err) {
           if (err) {
@@ -175,16 +202,141 @@ module.exports = {
         });
       };
     });
+  },
+
+  handleFriendRequestAction: function (req, res, next) {
+    var action = req.body.action;
+    var newFriend = req.body.newFriend;
+    var self = req.body.self;
+
+    // if action === accept, do a query for both users, and add both into friends array.
+     // search the DB for the specific user
+    var queryCondition = {username: newFriend};
+    findUser({username: self})
+    .then(function (foundSelfUser) {
+      if ( action === 'reject' ) {
+        // delete the friend request from self
+        var index = foundSelfUser.friendRequests.indexOf(newFriend);
+        foundSelfUser.friendRequests.splice(index, 1);
+        foundSelUser.save(function (err) {
+          if ( err ) {
+            next(err);
+          } else {
+            res.send(foundSelfUser);
+          }
+        });
+      } else {
+        // this check is technically unnecessary, since it's also done when
+        // the user submits a friend request in the first place.
+        if (foundSelfUser.friends.indexOf(newFriend) > -1) {
+          res.send('You are already friends with this user');
+        } else {
+          foundSelfUser.friends.push(newFriend);
+          // delete the friend request from self
+          var index = foundSelfUser.friendRequests.indexOf(newFriend);
+          foundSelfUser.friendRequests.splice(index, 1);
+          foundSelfUser.save(function (err) {
+            if ( err ) {
+              console.log( 'err' );
+              next(err);
+            }
+          })
+          // add self to newFriend
+          .then(function () {
+            findUser({username: newFriend})
+            .then(function (foundNewFriendUser) {
+              foundNewFriendUser.friends.push(self);
+
+              foundNewFriendUser.save(function (err) {
+                if ( err ) {
+                  next(err);
+                } else {
+                  user = foundNewFriendUser;
+                  res.send('user successfully added');
+                }
+              });
+            })
+            .fail(function (error) {
+              next(error);
+            });
+          });
+        };
+      };
+    });
+  },
+
+  handleGetFriends: function (req, res, next) {
+    // find User
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // find the documents for all friends. Return only the username and online status for those friends
+        User.find({ username: {$in: user.friends} },
+          {
+            username: 1,
+            online: 1,
+            _id: 0
+        })
+        .then(function (data) {
+          res.send(data);
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
+  },
+
+  submitLiveChallenge: function (req, res, next) {
+    console.log('submitLiveChallenge');
+    var user = req.body.user;
+    var opponent = req.body.opponent;
+    console.log(user, opponent);
+    //find user and add a challenge
+    findUser({username: user})
+    .then(function (founduser) {
+      // if ( user.challenge.opponent)
+      // console.log('before', founduser.currentChallenge);
+      founduser.challengeList.push(opponent);
+      // console.log('after', founduser.currentChallenge);
+      founduser.save(function(err) {
+        if (err) console.log('err');
+        else {
+          console.log('saved');
+          findUser({username: opponent})
+          .then(function (opponent) {
+            opponent.challengeList.push(user);
+            opponent.save(function() {
+              console.log('done');
+              res.send('challenge submitted');
+            });
+          });
+        }
+      });
+    });
   }
+    // .then(function () {
+      //find opponent and add a challenge
+  
+  
+  // Fetches a user's array of challenges to render them on 'Challenges' page
+  fetchChallenges : function (req, res, next) {
+    var username = req.body.username;
 
-
-
-
-
-
-
-
-
+    findUser({username: username})
+    .then( function (user) {
+      if (!user) {
+        next( new Error('Cannot find user with that username'));
+      }
+      res.send(user.challenges);
+    });
+  }
+  
 };
 
 

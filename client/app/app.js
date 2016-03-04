@@ -1,4 +1,4 @@
-angular.module('bolt', [
+ angular.module('bolt', [
   'bolt.services',
   'bolt.auth',
   'bolt.profile',
@@ -9,7 +9,9 @@ angular.module('bolt', [
   'multiload.controller',
   'multirun.controller',
   'bolt.createProfile',
-  'achievements.controller'
+  'achievements.controller',
+  'bolt.friendList',
+  'bolt.challenges'
 ])
 .config(function ($routeProvider, $httpProvider) {
   // Configure various routes
@@ -74,6 +76,11 @@ angular.module('bolt', [
       // which clicking on 'friend' on the search options
       templateUrl: 'app/views/friendList.html',
       controller: 'friendListController',
+      authenticate: true
+    })
+    .when('/challenges', {
+      templateUrl: 'app/views/challenges.html',
+      controller: 'challengesController',
       authenticate: true
     })
     .otherwise({

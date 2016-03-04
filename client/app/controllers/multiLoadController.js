@@ -31,18 +31,6 @@ angular.module('multiload.controller', ['bolt.profile'])
       // create a session out of the two users' usernames
       if (key !== session.username) {
         var id = [session.username, key].sort().join('');
-        // var user1 = {
-        //   name: session.username,
-        //   ready: false,
-        //   canceled: false,
-        //   finished: false
-        // };
-        // var user2 = {
-        //   name: key,
-        //   ready: false,
-        //   canceled: false,
-        //   finished: false
-        // };
 
         // This calculation should be placed in a factory
         var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
@@ -103,10 +91,39 @@ angular.module('multiload.controller', ['bolt.profile'])
     $location.path('/bolt');
   };
 
+    var searchFriend = function (geoQuery) {
+    console.log('searching');
+    var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
+      // create a session out of the two users' usernames
+      if (key === session.username) {
+        var id = [session.username, key].sort().join('');
+
+        // This calculation should be placed in a factory
+        var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
+        var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
+
+        geoFire.remove(key).then(function () {});
+        //cancel the search
+        $interval.cancel(stop);
+        geoQuery.cancel();
+
+        MultiGame.makeGame(id);
+        session.gameId = id;
+        session.competitor = key;
+        session.multiLat = destinationLat;
+        session.multiLng = destinationLng;
+        $location.path('multiGame');
+        return;
+      }
+    });
+  };
+
+
   return {
     search: search,
     generateQuery: generateQuery,
     addUserGeoFire: addUserGeoFire,
-    cancelSearch: cancelSearch
+    cancelSearch: cancelSearch,
+    searchFriend: searchFriend
   };
 });

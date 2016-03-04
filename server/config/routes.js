@@ -32,12 +32,26 @@ module.exports = function (app, express) {
   // Route to sign up users
   app.post('/api/users/signup', userController.signup);
 
+  // Route to signout users
+  app.get('/api/users/signout', userController.signout);
+
   // Route to update user preferences and settings
   app.put('/api/users/profile', userController.updateUser);
 
-  // Route to handle friend request
-  app.post('/api/users/friendRequest', userController.handleFriendRequest);
+  // Route to submit friend request
+  app.post('/api/users/friendRequest', userController.submitFriendRequest);
 
+  // Route to handle a friendRequestAction
+  app.post('/api/users/handleFriendRequestAction', userController.handleFriendRequestAction);
+
+  // Route to get all friends of a user
+  app.get('/api/users/handleGetFriends', userController.handleGetFriends);
+
+  app.post('/api/users/submitLiveChallenge', userController.submitLiveChallenge);
+
+  // Route to handle fetching user's current list of challenges
+  app.post('/api/users/challenges', userController.fetchChallenges);
+  
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler
   app.use(helpers.errorLogger);

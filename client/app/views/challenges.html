@@ -1,0 +1,19 @@
+<nav>
+  <div class="nav-wrapper grey darken-3">
+    <a href="#/" class="brand-logo">Achievements</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="#/profile" class="icon left">{{session.firstName}}</a></li>
+      <li><a href="#/" class="icon right">Run</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="titleMessage">Challenges</div>
+
+<div class="container">
+  <ul class="collection">
+    <li class="collection-item valign-wrapper" ng-repeat='challenge in challenges track by $index'>
+      <h3 class="valign"> {{ challenge.friend }}</h3>
+    </li>
+  </ul>
+</div>
