@@ -333,7 +333,7 @@ body{
   padding: 0.2em;
 }
 
-.right:hover {
+.options:hover {
   color: rgba(237, 65, 42, 0.85);
 }
 
@@ -348,9 +348,9 @@ body{
 
 .friendRequestEntry {
   font-size: 1em !important;
+  text-align: center !important;
+  height: 4.5em ;
 }
-
-
 
 /************ Friend List **************/
 .friendListContainer {

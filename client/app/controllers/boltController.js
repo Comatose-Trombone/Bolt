@@ -5,20 +5,19 @@ angular.module('bolt.controller', [])
 .controller('BoltController', function ($scope, $location, $window, $interval, Profile) {
   $scope.session = $window.localStorage;
   $scope.friendRequests = [];
-  if ( $scope.friendRequests[0] === "" ) {
-    // if there are no friend requests, the array will equal [""]. we want it to be []
-    $scope.friendRequests.pop();
-  }
-
-  // checks every 5 seconds to see if a user has any friend requests
+  $scope.challengeList = [];
   var checkForFriendRequests = function () {
     Profile.getUser()
     .then(function (user) {
-      console.log('foobar');
+      // set friend and challenge requests
       $scope.friendRequests = user.friendRequests;
+      $scope.challengeList = user.challengeList;
+      console.log('challist', $scope.challengeList);
+      console.log('friendreq', $scope.friendRequests);
+
       var friendIcon = document.getElementsByClassName("friendIcon")[0];
       if ( friendIcon ) {
-        if ( $scope.friendRequests.length > 0 ) {
+        if ( $scope.friendRequests.length > 0 || $scope.challengeList.length > 0) {
           // change the color of the icon to green
           friendIcon.classList.add("activeFriendIcon");
         } else {
@@ -30,7 +29,7 @@ angular.module('bolt.controller', [])
       };
     });
   };
-
+  // run the check for friend requests every 1.5 seconds
   checkForFriendRequests();
   var checkFriendRequestsInterval = $interval(function () {
     checkForFriendRequests();
