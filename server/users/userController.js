@@ -296,33 +296,50 @@ module.exports = {
     console.log('submitLiveChallenge');
     var user = req.body.user;
     var opponent = req.body.opponent;
-    console.log(user, opponent);
-    //find user and add a challenge
-    findUser({username: user})
-    .then(function (founduser) {
-      // if ( user.challenge.opponent)
-      // console.log('before', founduser.currentChallenge);
-      founduser.currentChallenge = {
-        match: false,
-        cancel: false,
-        opponent: opponent
-      };
-      // console.log('after', founduser.currentChallenge);
-      founduser.save(function (err) {
-        findUser({username: opponent})
-        .then(function (opponent) {
-          opponent.challengeList.push(user);
-          opponent.save(function () {
-            console.log('done');
-            res.send('challenge submitted');
-          });
-        });
+    var currentChallenge = {
+      match: false,
+      cancel: false,
+      opponent: opponent
+    };
+
+    User.findOneAndUpdate(
+      {username: user},
+      {$set: {currentChallenge: currentChallenge}},
+      {safe: true})
+    .then(function () {
+      User.findOneAndUpdate(
+        {username: opponent},
+        {$push: {challengeList: user} },
+        {safe: true})
+      .then(function (data) {
+        res.send(data);
       });
     });
-  }
-    // .then(function () {
-      //find opponent and add a challenge
+  },
 
+  handleLiveChallengeRequest: function (req, res, next) {
+    var username = req.body.username;
+    var opponent = req.body.opponent;
+    var action = req.body.action;
+
+    var currentChallenge = {
+      match: false,
+      cancel: false,
+      opponent: opponent
+    };
+
+    // delete the challenge request, and set the current Challenge
+    User.findOneAndUpdate(
+      {username: username},
+      {
+        $pull: {challengeList: opponent},
+        $set: {currentChallenge: currentChallenge}
+      },
+      {safe: true})
+    .then(function (user) {
+      res.send(user);
+    });
+  }
 };
 
 

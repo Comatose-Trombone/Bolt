@@ -49,6 +49,9 @@ module.exports = function (app, express) {
 
   app.post('/api/users/submitLiveChallenge', userController.submitLiveChallenge);
 
+  // allows a user to accept or reject a live challenge request
+  app.post('/api/users/handleLiveChallengeRequest', userController.handleLiveChallengeRequest);
+
 
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler

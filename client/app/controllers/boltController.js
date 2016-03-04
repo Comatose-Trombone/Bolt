@@ -12,8 +12,6 @@ angular.module('bolt.controller', [])
       // set friend and challenge requests
       $scope.friendRequests = user.friendRequests;
       $scope.challengeList = user.challengeList;
-      console.log('challist', $scope.challengeList);
-      console.log('friendreq', $scope.friendRequests);
 
       var friendIcon = document.getElementsByClassName("friendIcon")[0];
       if ( friendIcon ) {
@@ -59,8 +57,16 @@ angular.module('bolt.controller', [])
     });
   };
 
+  // either accept or reject a friend request
   $scope.handleFriendRequest = function (action, newFriend) {
     Profile.handleFriendRequest(action, this.session.username, newFriend)
+    .then(function (data) {
+      console.log('data', data);
+    });
+  };
+
+  $scope.handleLiveChallengeRequest = function (action, challenger) {
+    Profile.handleLiveChallengeRequest(this.session.username, challenger, action)
     .then(function (data) {
       console.log('data', data);
     });

@@ -262,12 +262,29 @@ angular.module('bolt.services', [])
       });
     };
 
+    // This is a general function which will allow you to either add or remove
+    // elements from an array stored inside mongo
+    var handleLiveChallengeRequest = function (username, opponent, action) {
+      return $http({
+        method: 'POST',
+        url: '/api/users/handleLiveChallengeRequest',
+        data: {
+          username: username,
+          opponent: opponent,
+          action: action
+        }
+      }).then(function (res) {
+        return res;
+      });
+    };
+
   return {
     updateUser: updateUser,
     getUser: getUser,
     sendFriendRequest: sendFriendRequest,
     handleFriendRequest: handleFriendRequest,
-    getFriends: getFriends
+    getFriends: getFriends,
+    handleLiveChallengeRequest: handleLiveChallengeRequest
   };
 })
 
