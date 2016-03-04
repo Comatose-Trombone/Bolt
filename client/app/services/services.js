@@ -392,7 +392,7 @@ angular.module('bolt.services', [])
   };
 })
 
-.factory('raceFriends', function($http, $location, $window) {
+.factory('raceFriends', function ($http, $location, $window) {
   var submitLiveChallenge = function (user, opponent) {
     return $http({
       method: 'POST',
@@ -403,14 +403,14 @@ angular.module('bolt.services', [])
       }
     }).then(function (res) {
       return res;
-    })
+    });
   };
 
 
 
   return {
     submitLiveChallenge: submitLiveChallenge
-  }
+  };
 });
 
 

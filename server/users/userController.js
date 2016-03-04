@@ -302,21 +302,21 @@ module.exports = {
     .then(function (founduser) {
       // if ( user.challenge.opponent)
       // console.log('before', founduser.currentChallenge);
-      founduser.challengeList.push(opponent);
+      founduser.currentChallenge = {
+        match: false,
+        cancel: false,
+        opponent: opponent
+      };
       // console.log('after', founduser.currentChallenge);
-      founduser.save(function(err) {
-        if (err) console.log('err');
-        else {
-          console.log('saved');
-          findUser({username: opponent})
-          .then(function (opponent) {
-            opponent.challengeList.push(user);
-            opponent.save(function() {
-              console.log('done');
-              res.send('challenge submitted');
-            });
+      founduser.save(function (err) {
+        findUser({username: opponent})
+        .then(function (opponent) {
+          opponent.challengeList.push(user);
+          opponent.save(function () {
+            console.log('done');
+            res.send('challenge submitted');
           });
-        }
+        });
       });
     });
   }
