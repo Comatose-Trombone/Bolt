@@ -7,7 +7,6 @@ var helpers = require('../config/helpers');
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
-var saveUser = Q.nbind(User.save, User);
 
 module.exports = {
 
@@ -27,6 +26,12 @@ module.exports = {
         return user.comparePasswords(password)
         .then(function (foundUser) {
           if (foundUser) {
+            // set online to true
+            user.online = true;
+            user.save(function () {
+              console.log('user', user);
+            } );
+
             var token = jwt.encode(user, 'secret');
             res.json({
               token: token,
@@ -120,6 +125,27 @@ module.exports = {
     }
   },
 
+  signout: function (req, res, next) {
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // change online to false and save
+        user.online = false;
+        user.save(function () {
+          res.send('Logged Out');
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
+  },
+
   checkAuth: function (req, res, next) {
     // checking to see if the user is authenticated
     // grab the token in the header is any
@@ -161,7 +187,8 @@ module.exports = {
       }
       // if you are already friends with the person, then respond with a message
       else if ( foundUser.friends.indexOf(username) > -1 ) {
-        res.send('You are already friends with this person');
+        console.log('friends already');
+        res.send('You are already friends with this user');
       }
       // if username exists, add the person's username to the friend request list
       else {
@@ -236,14 +263,65 @@ module.exports = {
         };
       };
     });
+  },
+
+  handleGetFriends: function (req, res, next) {
+    // find User
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      findUser({username: user.username})
+      .then(function (user) {
+        // find the documents for all friends. Return only the username and online status for those friends
+        User.find({ username: {$in: user.friends} },
+          {
+            username: 1,
+            online: 1,
+            _id: 0
+        })
+        .then(function (data) {
+          res.send(data);
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.send(404);
+      });
+    }
+  },
+
+  submitLiveChallenge: function (req, res, next) {
+    console.log('submitLiveChallenge');
+    var user = req.body.user;
+    var opponent = req.body.opponent;
+    console.log(user, opponent);
+    //find user and add a challenge
+    findUser({username: user})
+    .then(function (founduser) {
+      // if ( user.challenge.opponent)
+      // console.log('before', founduser.currentChallenge);
+      founduser.challengeList.push(opponent);
+      // console.log('after', founduser.currentChallenge);
+      founduser.save(function(err) {
+        if (err) console.log('err');
+        else {
+          console.log('saved');
+          findUser({username: opponent})
+          .then(function (opponent) {
+            opponent.challengeList.push(user);
+            opponent.save(function() {
+              console.log('done');
+              res.send('challenge submitted');
+            });
+          });
+        }
+      });
+    });
   }
-
-
-
-
-
-
-
+    // .then(function () {
+      //find opponent and add a challenge
 
 };
 

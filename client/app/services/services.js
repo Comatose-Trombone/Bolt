@@ -281,8 +281,16 @@ angular.module('bolt.services', [])
           newFriend: newFriend
         }
       }).then(function (res) {
-        console.log('res');
         return res;
+      });
+    };
+
+    var getFriends = function () {
+      return $http({
+        method: 'GET',
+        url: '/api/users/handleGetFriends'
+      }).then(function (friends) {
+        return friends;
       });
     };
 
@@ -290,7 +298,8 @@ angular.module('bolt.services', [])
     updateUser: updateUser,
     getUser: getUser,
     sendFriendRequest: sendFriendRequest,
-    handleFriendRequest: handleFriendRequest
+    handleFriendRequest: handleFriendRequest,
+    getFriends: getFriends
   };
 })
 
@@ -386,19 +395,26 @@ angular.module('bolt.services', [])
   };
 
   var signout = function () {
-    $window.localStorage.removeItem('username');
-    $window.localStorage.removeItem('first');
-    $window.localStorage.removeItem('last');
-    $window.localStorage.removeItem('firstName');
-    $window.localStorage.removeItem('lastName');
-    $window.localStorage.removeItem('phone');
-    $window.localStorage.removeItem('email');
-    $window.localStorage.removeItem('competitor');
-    $window.localStorage.removeItem('preferredDistance');
-    $window.localStorage.removeItem('runs');
-    $window.localStorage.removeItem('achievements');
-    $window.localStorage.removeItem('com.bolt');
-    $location.path('/signin');
+    $http({
+      method: 'GET',
+      url: '/api/users/signout'
+    })
+    .then(function (data) {
+      console.log('successfully signed out');
+      $window.localStorage.removeItem('username');
+      $window.localStorage.removeItem('first');
+      $window.localStorage.removeItem('last');
+      $window.localStorage.removeItem('firstName');
+      $window.localStorage.removeItem('lastName');
+      $window.localStorage.removeItem('phone');
+      $window.localStorage.removeItem('email');
+      $window.localStorage.removeItem('competitor');
+      $window.localStorage.removeItem('preferredDistance');
+      $window.localStorage.removeItem('runs');
+      $window.localStorage.removeItem('achievements');
+      $window.localStorage.removeItem('com.bolt');
+      $location.path('/signin');
+    });
   };
 
 
@@ -408,4 +424,47 @@ angular.module('bolt.services', [])
     isAuth: isAuth,
     signout: signout
   };
+})
+
+.factory('raceFriends', function($http, $location, $window) {
+  var submitLiveChallenge = function (user, opponent) {
+    return $http({
+      method: 'POST',
+      url: '/api/users/submitLiveChallenge',
+      data: {
+        user: user,
+        opponent: opponent
+      }
+    }).then(function (res) {
+      return res;
+    })
+  };
+
+
+
+  return {
+    submitLiveChallenge: submitLiveChallenge
+  }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,20 +10,26 @@
 
 <div class="titleMessage"> Who Do You Want to Race? </div>
 
-<div class="container">
+<div class="container friendListContainer">
   <ul class="collection">
-    <li class="collection-item valign-wrapper" ng-repeat='friend in friends track by $index'>
-      <div class="greenCircle"></div>
+    <li class="collection-item valign-wrapper" ng-repeat='friend in friends track by $index' ng-class='{redBackground: isSelected(friend)}'
+    ng-click="selectFriend(friend)"
+    >
+      <div class="greenOnlineCircle" ng-show="friend.online"></div>
+      <div class="whiteOfflineCircle" ng-show="!friend.online"></div>
       <!-- eventually index this by who is on or not -->
-      <p class="valign"> {{ friend }}</p>
+      <p class="valign"> {{ friend.username }}</p>
     </li>
   </ul>
 </div>
 
-<div class="container profile center-align">
-  <div class="buttonLayer">
-    <span ng-click="navigate('/createProfile')"
-      class="waves-effect grey darken-3 waves-light btn center"> Race!
-    </span>
+<div class="container center-align">
+  <div >
+    <button ng-click="raceLive()"
+      class="waves-effect grey darken-3 waves-light btn"> Race Live
+    </button>
+    <button ng-click="sendChallenge()"
+      class="waves-effect grey darken-3 waves-light btn"> Send Challenge
+    </button>
   </div>
 </div>
