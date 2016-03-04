@@ -55,7 +55,8 @@ var UserSchema = new mongoose.Schema({
       'High Five': 0,
       Iron: 0 //experimental
     }
-  }
+  },
+  challenges: Array
 });
 
 UserSchema.methods.comparePasswords = function (candidatePassword) {
