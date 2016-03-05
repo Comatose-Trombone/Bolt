@@ -39,9 +39,6 @@ html, body {
   display: inline;
   float: left;
   height: 100%;
-<<<<<<< HEAD
-/*  width: 60%;*/
-=======
 }
 
 .completedOpp {
@@ -192,26 +189,29 @@ body{
   color: white;
   font-size: 2em;
 }
-.map {
-  display: block;
-  padding-top: 3vh;
 
-}
 .medalContainerOuter {
   display: block;
+  position: absolute;
+  top:90px;
+  right:100px;
   height: 10vh;
   margin-top: 1vh;
   float: right;
-  
+}
+.row {
+  display: block;
+  padding-top: 30px;
+  padding-left: 20px;
 }
 
 .medalContainerInner {
   display: block;
   color: white;
   height: 5vh;
-  width: 20vh;
+  width: 18vh;
   margin: 0 auto 0 auto;
-  font-size: 2em;
+  font-size: 1.3em;
   vertical-align: middle;
 }
 
