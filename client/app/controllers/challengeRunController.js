@@ -74,7 +74,7 @@ angular.module('challengerun.controller', [])
     // Determine if user won challenge by comparing their total time with the time to beat
     var challengeWon = totalTimeInSeconds <= timeToBeatInSeconds;
 
-    $rootScope.challengeWinner = true;
+    $rootScope.challengeWinner = challengeWon;
     var medal = challengeWon ? 'Trophy' : null;
 
     var date = new Date();
@@ -123,7 +123,7 @@ angular.module('challengerun.controller', [])
     });
 
     $interval.cancel(statusUpdateLoop);
-    $location.path('/finish');
+    $location.path('/challengefinish');
   };
 
   // Check if user is in close proximity to destination
