@@ -236,7 +236,7 @@ angular.module('bolt.services', [])
           //a 'firstName' key in the incoming object in order to update the
           //'firstName' key in the User DB. If it's named something else
           //('first', 'firstname', 'firstN', etc.), it won't work
-          username: user
+          username: user.username
         }
       }).then(function (res) {
         return res;

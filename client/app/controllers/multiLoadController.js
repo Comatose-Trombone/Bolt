@@ -28,7 +28,6 @@ angular.module('multiload.controller', ['bolt.profile'])
   var checkIfFriendCancel = function () {
     Profile.getUser(session.username)
     .then(function (user) {
-      console.log('currentChallenge', user.currentChallenge);
       // listen if the other user cancelled/rejected. if so, cancel the search.
       if ( user.currentChallenge.cancel ) {
       // NOTE: you do NOT need to change the cancel status back to false. This is done when you
@@ -53,11 +52,9 @@ angular.module('multiload.controller', ['bolt.profile'])
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
-      console.log('key,', key);
-      console.log(session.friendOpponent);
+      console.log('session.findopp', session.friendOpponent === "")
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
-          console.log('hello');
           bool = true;
         }
       } else {
