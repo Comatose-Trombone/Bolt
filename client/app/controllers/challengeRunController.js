@@ -1,22 +1,37 @@
-angular.module('run.controller', [])
+angular.module('challengerun.controller', [])
 
-.controller('RunController',
+.controller('challengeRunController',
   function ($scope, $timeout, $interval, $window,
-            $location, $route, Geo, Run, Profile) {
-  $scope.initialLocation;
+            $location, $route, soloChallenge, Run, Profile, Geo) {
+
+  $scope.session = $window.localStorage;
+  $scope.initialLoc = {
+    lat: $scope.session.challengeStartLat,
+    lng: $scope.session.challengeStartLng
+  };
   $scope.userLocation;
-  $scope.destination;
+  $scope.destination = {
+    lat: $scope.session.challengeEndLat,
+    lng: $scope.session.challengeEndLng
+  };
+  $scope.raceStarted;
+
+  console.log($scope.session);
+
   $scope.hasHours = true;
-  $scope.nameRun = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
 
+  var withinRangeOfStartPoint = false;
   var startTime;
   var runTime;
   var statusUpdateLoop;
   var startLat;
   var startLong;
-  var FINISH_RADIUS = 0.0002; // miles?
+  var FINISH_RADIUS = 0.0002;
+  var START_RADIUS = 0.0002;
+
+  checkIfUserNearStart = $interval(checkNearStartPoint, 300);
 
   // Update run timer
   var updateTotalRunTime = function () {
@@ -24,44 +39,26 @@ angular.module('run.controller', [])
     runTime = moment().minute(0).second(secondsRan);
   };
 
-  // Define waiting messages for the user while Google maps loads...
-  var messages = [
-    "Finding the best route for you",
-    "Scanning the streets",
-    "Charging runtime engine",
-    "Looking into the eye of the tiger"
-  ];
-
-  var setRunMessage = function () {
-    $scope.runMessage = messages[Math.floor(Math.random() * messages.length)] + "...";
-  };
-
-  // Display random waiting message
-  $interval(setRunMessage, Math.random() * 1000, messages.length);
-
+  // Start the race: starts race timer and update loop
   $scope.startRun = function () {
-    // Simulate finishing run for manual testing
-    // setTimeout(finishRun, 4000); // simulate finishing run for manual testing
-    startTime = moment();
-    $scope.raceStarted = true;
-    statusUpdateLoop = $interval(updateStatus, 300);
-    Run.setPointsInTime($scope);
-    Run.setInitialMedalGoal($scope);
-    document.getElementById('map').style.height = "80vh";
-    document.getElementById('botNav').style.height = "20vh";
+    if (withinRangeOfStartPoint) {
+      $interval.cancel(checkIfUserNearStart);
+      // Simulate finishing run for manual testing
+      // setTimeout(finishRun, 4000); // simulate finishing run for manual testing
+      startTime = moment();
+      $scope.raceStarted = true;
+      statusUpdateLoop = $interval(updateStatus, 300);
+      // Run.setPointsInTime($scope);
+      // Run.setInitialMedalGoal($scope);
+      document.getElementById('map').style.height = "80vh";
+      document.getElementById('botNav').style.height = "20vh";
+    } else {
+      // TODO: Add html that tells user they need to get closer to start point
+    }
   };
 
-  // Generate a new map or route after initial map has been loaded
-  $scope.regenRace = function () {
-    $route.reload();
-  };
-
-  // Generates google map with current location marker and run route details
-  var makeInitialMap = function () {
-    Geo.makeInitialMap($scope);
-  };
-
-  makeInitialMap();
+  // Generate map
+  soloChallenge.makeInitialMap($scope, $scope.destination);
 
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
@@ -69,23 +66,19 @@ angular.module('run.controller', [])
     var medal = $scope.$parent.achievement = $scope.currentMedal;
 
     var date = new Date();
+    console.log("initial loc", $scope.initialLoc);
     var endLocation = {
       latitude: $scope.destination.lat,
-      longitude: $scope.destination.lng
+      longitude: $scope.destination.long
     };
     var googleExpectedTime = null;
     var actualTime = runTime;
 
     var currentRunObject = {
-      name: "",
       date: date,
-      totalDistance: $scope.totalDistance,
-      startLocation: {
-        latitude: $scope.initialLoc.latitude,
-        longitude: $scope.initialLoc.latitude
-      },
+      startLocation: $scope.initialLoc,
       endLocation: {
-        longitude: $scope.destination.lng,
+        longitude: $scope.destination.long,
         latitude: $scope.destination.lat
       },
       googleExpectedTime: null,
@@ -97,10 +90,8 @@ angular.module('run.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
-      var number = user.runs.length + 1;
       var achievements = user.achievements;
       var previousRuns = user.runs;
-      currentRunObject.name = "Route " + number;
       //update achievments object
       achievements[medal] = achievements[medal] + 1;
       $window.localStorage.setItem('achievements', JSON.stringify(achievements));
@@ -128,8 +119,17 @@ angular.module('run.controller', [])
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
       if (distRemaining < FINISH_RADIUS) {
-
         finishRun();
+      }
+    }
+  };
+
+  // Check if user is within range of starting point before allowing race to start, to ensure a fair race
+  var checkNearStartPoint = function () {
+    if ($scope.initialLoc && $scope.userLocation) {
+      var distRemaining = Geo.distBetween($scope.userLocation, $scope.initialLoc);
+      if (distRemaining < START_RADIUS) {
+        withinRangeOfStartPoint = true;
       }
     }
   };
@@ -138,7 +138,6 @@ angular.module('run.controller', [])
   var updateStatus = function () {
     Geo.updateCurrentPosition($scope);
     updateTotalRunTime();
-    Run.updateGoalTimes($scope);
     checkIfFinished();
   };
 
@@ -146,5 +145,6 @@ angular.module('run.controller', [])
   // Does this make sure to stop tracking if they close the window? --> all scripts die when the browser is no longer interpreting them
   $scope.$on('$destroy', function () {
     $interval.cancel(statusUpdateLoop);
+    $interval.cancel(checkIfUserNearStart);
   });
 });

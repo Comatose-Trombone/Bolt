@@ -69,10 +69,17 @@ var UserSchema = new mongoose.Schema({
       Silver: 0,
       Bronze: 0,
       'High Five': 0,
-      Iron: 0 //experimental
+      Trophy: 0
     }
   },
-  challenges: Array
+  challenges: {
+    type: Array,
+    default: [ {
+      startLocation: {lat: 37.789, lng: -122.379},
+      endLocation: {lat: 37.760, lng: -122.360},
+      timeToBeat: null
+    } ]
+  }
 });
 
 UserSchema.methods.comparePasswords = function (candidatePassword) {

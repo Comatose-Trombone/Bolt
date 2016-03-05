@@ -11,7 +11,8 @@
   'bolt.createProfile',
   'achievements.controller',
   'bolt.friendList',
-  'bolt.challenges'
+  'bolt.challenges',
+  'challengerun.controller'
 ])
 .config(function ($routeProvider, $httpProvider) {
   // Configure various routes
@@ -81,6 +82,11 @@
     .when('/challenges', {
       templateUrl: 'app/views/challenges.html',
       controller: 'challengesController',
+      authenticate: true
+    })
+    .when('/challengerun', {
+      templateUrl: 'app/views/challengeRun.html',
+      controller: 'challengeRunController',
       authenticate: true
     })
     .otherwise({

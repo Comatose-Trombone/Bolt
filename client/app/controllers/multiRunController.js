@@ -244,6 +244,7 @@ angular.module('multirun.controller', [])
       var field = oppNum + "Progress";
       $scope.oppPercentComplete = game.field;
     });
+
   };
 
 

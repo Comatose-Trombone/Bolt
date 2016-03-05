@@ -38,7 +38,7 @@ angular.module('achievements.controller', [])
         provideRouteAlternatives: false
       }, function (response, status) {
         directionsRenderer.setDirections(response);
-      });
+      })
     };
 
     $scope.toggleShowDetails = function (run) {
