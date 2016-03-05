@@ -10,7 +10,7 @@
 
 <div class="titleMessage">Challenges</div>
 
-<div class="container">
+<div class="container" ng-show = "challengeShow">
   <ul class="collection">
     <li class="collection-item valign-wrapper" ng-repeat='challenge in challenges track by $index'>
       <h6 class="valign">   You have a challenge from : {{ challenge.friend }},    Distance : {{challenge.totalDistance}},    Time to Beat : {{challenge.actualTime.slice(14,22)}}</h6>
