@@ -23,9 +23,26 @@ angular.module('multiload.controller', ['bolt.profile'])
   var currentUser;
   var userPosition;
   var stop;
+  var bool;
+
+  var checkIfFriendCancel = function () {
+    // query DB
+    // check the status on
+    Profile.getUser(session.username)
+    .then(function (user) {
+      if ( user.currentChallenge.cancel ) {
+        $window.localStorage.removeItem("friendOpponent");
+        cancelSearch();
+      }
+    });
+  };
 
   // Find runners in an area given by the geoQuery object
   var search = function (geoQuery) {
+    // if you are waiting for a friend's response to a challenge, need to check if friend cancels.
+    if ( session.friendOpponent !== "" ) {
+      checkIfFriendCancel();
+    }
 
     if ($location.path() !== "/multiLoad") {
       geoFire.remove(session.username).then(function () {});
@@ -33,11 +50,18 @@ angular.module('multiload.controller', ['bolt.profile'])
     }
 
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
-
-      // create a session out of the two users' usernames
-      if (key !== session.username) {
-        var id = [session.username, key].sort().join('');
-
+      // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
+      // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
+      if ( session.friendOpponent !== "" ) {
+        if ( key === session.friendOpponent ) {
+          bool = true;
+        }
+      } else {
+        if ( key !== session.username ) {
+          var id = [session.username, key].sort().join('');
+        }
+      }
+      if ( bool ) {
         // This calculation should be placed in a factory
         var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
         var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
@@ -69,7 +93,6 @@ angular.module('multiload.controller', ['bolt.profile'])
 
     //stop is kind of misnamed here
     stop = $interval(function () {
-      console.log('stop called');
       search(geoQuery);
     }, 2000);
 
@@ -95,34 +118,6 @@ angular.module('multiload.controller', ['bolt.profile'])
   var cancelSearch = function () {
     $location.path('/bolt');
   };
-
-  // var searchFriend = function (geoQuery) {
-  //   console.log('searching');
-  //   var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
-  //     // create a session out of the two users' usernames
-  //     if (key === session.username) {
-  //       var id = [session.username, key].sort().join('');
-
-  //       // This calculation should be placed in a factory
-  //       var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
-  //       var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
-
-  //       geoFire.remove(key).then(function () {});
-  //       //cancel the search
-  //       $interval.cancel(stop);
-  //       geoQuery.cancel();
-
-  //       MultiGame.makeGame(id);
-  //       session.gameId = id;
-  //       session.competitor = key;
-  //       session.multiLat = destinationLat;
-  //       session.multiLng = destinationLng;
-  //       $location.path('multiGame');
-  //       return;
-  //     }
-  //   });
-  // };
-
 
   return {
     search: search,
