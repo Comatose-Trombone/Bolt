@@ -18,8 +18,6 @@ angular.module('challengerun.controller', [])
   $scope.raceStarted;
   $scope.runTime = 0;
 
-  console.log($scope.session);
-
   $scope.hasHours = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
@@ -65,25 +63,35 @@ angular.module('challengerun.controller', [])
 
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
-    var challengeWon = $scope.runTime <= $scope.timeToBeat;
-    var medal = $scope.$parent.achievement = $scope.currentMedal;
+    // TODO: this determination of who wins only works if the total run time is less than 1 hour, need to change how timing is done to fix this
+    // Calculate total time in seconds
+    var totalTimeArray = $scope.runTime.format('mm:ss').split(':');
+    var totalTimeInSeconds = ((totalTimeArray[0] * 60) + totalTimeArray[1]);
+    // Calculate timeToBeat in seconds, first need to do some string manipulation to get it into correct form
+    var timeToBeatWithColons = $scope.timeToBeat.replace('.', ':');
+    var timeToBeatArray = timeToBeatWithColons.split(':');
+    var timeToBeatInSeconds = ((timeToBeatArray[1] * 60) + timeToBeatArray[2]);
+    // Determine if user won challenge by comparing their total time with the time to beat
+    var challengeWon = totalTimeInSeconds <= timeToBeatInSeconds;
+
+    console.log(totalTimeArray);
+    console.log(timeToBeatArray);
+    console.log(challengeWon);
+    var medal = challengeWon ? 'Trophy' : null;
 
     var date = new Date();
-    var endLocation = {
-      latitude: $scope.destination.lat,
-      longitude: $scope.destination.long
-    };
-    var actualTime = runTime;
 
     var currentRunObject = {
       date: date,
-      startLocation: $scope.initialLoc,
-      endLocation: {
-        longitude: $scope.destination.long,
-        latitude: $scope.destination.lat
+      startLocation: {
+        latitude: $scope.initialLoc.lat,
+        longitude: $scope.initialLoc.lng
       },
-      googleExpectedTime: null,
-      actualTime: runTime,
+      endLocation: {
+        latitude: $scope.destination.lat,
+        longitude: $scope.destination.lng
+      },
+      actualTime: $scope.runTime,
       medalReceived: medal,
       racedAgainst: null
     };
@@ -102,8 +110,10 @@ angular.module('challengerun.controller', [])
         achievements: achievements,
         runs: previousRuns
       };
-      Profile.updateUser(updatedAchievementsData, user)
+      console.log(user.username);
+      Profile.updateUserInfo(updatedAchievementsData, user.username)
       .then(function (updatedProfile) {
+        console.log(updatedProfile);
         return updatedProfile;
       })
       .catch(function (err) {
@@ -119,9 +129,9 @@ angular.module('challengerun.controller', [])
   var checkIfFinished = function () {
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
-      if (distRemaining < FINISH_RADIUS) {
+      // if (distRemaining < FINISH_RADIUS) {
         finishRun();
-      }
+      // }
     }
   };
 

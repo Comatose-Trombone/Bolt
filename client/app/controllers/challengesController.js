@@ -6,6 +6,7 @@ angular.module('bolt.challenges', [])
 
   $scope.challengeRunStart = function (index) {
     var challengeInfo = $scope.challenges[index];
+
     $window.localStorage.setItem('challengeStartLat', challengeInfo.startLocation.latitude);
     $window.localStorage.setItem('challengeStartLng', challengeInfo.startLocation.longitude);
     $window.localStorage.setItem('challengeEndLat', challengeInfo.endLocation.latitude);

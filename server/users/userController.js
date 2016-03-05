@@ -100,7 +100,10 @@ module.exports = {
     findUser(user)
     .then(function (user) {
       if (user) {
-        return updateUserDB(queryCondition, newData);
+        updateUserDB(queryCondition, newData)
+        .then( function (data) {
+          res.send(data);
+        })
       } else {
         next(new Error('No user found!'));
       }
