@@ -38,7 +38,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
     });
   };
 
-  $scope.session = window.localStorage;
+  $scope.session = $window.localStorage;
 
   // Give signout ability to $scope
   $scope.signout = function () {

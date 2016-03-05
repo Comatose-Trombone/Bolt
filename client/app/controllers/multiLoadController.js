@@ -30,7 +30,7 @@ angular.module('multiload.controller', ['bolt.profile'])
     .then(function (user) {
       // listen if the other user cancelled/rejected. if so, cancel the search.
       if ( user.currentChallenge.cancel ) {
-      // NOTE: you do NOT need to change the cancel status back to false. This is done when you
+      // NOTE: you do NOT need to change the cancel status of the user back to false. This is done when you
       // send a challenge request, or when you accept one.
         cancelSearch();
       }
@@ -44,15 +44,14 @@ angular.module('multiload.controller', ['bolt.profile'])
       checkIfFriendCancel();
     }
 
-    if ($location.path() !== "/multiLoad") {
-      geoFire.remove(session.username).then(function () {});
-      $interval.cancel(stop);
+    if ( $location.path() !== "/multiLoad" ) {
+      cancelSearch();
     }
 
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
-      console.log('session.findopp', session.friendOpponent === "")
+      console.log('session multiload', session, session.friendOpponent === "");
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
           bool = true;
@@ -118,25 +117,26 @@ angular.module('multiload.controller', ['bolt.profile'])
   };
 
   var cancelSearch = function () {
-    // updates the opponent's profile, setting their current match status cancel to true
-    // this is necessary when both players are queued, but one player leaves. Must
-    // notiffy the other player.
+    console.log('cancelSearchCalled');
 
-    var currentChallenge = {
-      opponent: session.username,
-      match: false,
-      cancel: true
-    };
-    var updateUserInfo = {
-      $set: { currentChallenge: currentChallenge }
-    };
-    Profile.updateUserInfo(updateUserInfo, session.opponent);
-    $window.localStorage.removeItem("friendOpponent");
+    if ( session.friendOpponent !== "" ) {
+      // notify the other person that you cancel
+      var currentChallenge = {
+        opponent: session.username,
+        match: false,
+        cancel: true
+      };
+      var updateUserInfo = {
+        $set: { currentChallenge: currentChallenge }
+      };
+      Profile.updateUserInfo(updateUserInfo, session.opponent);
+    }
 
+    // reset the value on the sessions, kill the interval, and relocate
+    geoFire.remove(session.username).then(function () {});
+    $interval.cancel(stop);
+    $window.localStorage.setItem('friendOpponent', "");
     $location.path('/bolt');
-
-    // if two users are loading, and one cancels, it should alert the other person that there was a cancellation.
-    // update user
   };
 
   return {
