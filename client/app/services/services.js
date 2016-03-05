@@ -270,8 +270,7 @@ angular.module('bolt.services', [])
       });
     };
     var sendChallengeRequest = function (run, $scope) {
-      console.log("run is", run)
-      console.log("friendname is ", $scope.friend)
+      console.log("run before post", run);
       return $http({
         method: 'POST',
         url: '/api/users/challengeRequest',

@@ -430,5 +430,11 @@ body{
 .redBackground {
   background-color: rgba(255, 125, 110, 0.6) !important;
 }
-
+.accept {
+  display: block;
+  margin: 0 auto 0 auto;
+  font-size: 1.3em;
+  /*vertical-align: top;*/
+  float: right;
+}
 
