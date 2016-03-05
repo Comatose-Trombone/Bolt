@@ -101,7 +101,7 @@ angular.module('run.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
-      var number = user.runs.length+1;
+      var number = user.runs.length + 1;
       var achievements = user.achievements;
       var previousRuns = user.runs;
       currentRunObject.name = "Route " + number;

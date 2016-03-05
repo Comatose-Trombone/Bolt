@@ -40,10 +40,6 @@ angular.module('bolt.controller', [])
       $location.path('/run');
     } else if (document.getElementById("switch_3_center").checked) {
       $location.path('/friendList');
-      // Running with friends has not been implemented yet, this is a
-      // placeholder for when this functionality has been developed.
-      // For now redirect runners to solo run.
-      // $location.path('/run');
     } else {
       // Public run
       $location.path('/multiLoad');
@@ -65,20 +61,28 @@ angular.module('bolt.controller', [])
     });
   };
 
-  $scope.handleLiveChallengeRequest = function (action, challenger) {
-    var newInfo = {
-      $pull: {challengeList: challenger},
-      $set: {currentChallenge: {
-        challenger: challenger,
-        match: true,
-        cancel: false
-        }
-      }
+  $scope.handleLiveChallengeRequest = function (action, opponent) {
+    var currentChallenge = {
+      challenger: "",
+      match: false,
+      cancel: false };
+    // edit the currentChallenge object in user
+    if ( action === 'accept' ) {
+      currentChallenge.match = true;
+      currentChallenge.challenger = opponent;
+    }
+
+    var updateUser = {
+      $pull: {challengeList: opponent},
+      $set: {currentChallenge: currentChallenge}
     };
 
-    Profile.updateUserInfo(newInfo, this.session.username)
+    Profile.updateUserInfo(updateUser, this.session.username)
     .then(function (data) {
-      console.log(data);
+      if ( action === 'accept' ) {
+        window.localStorage.setItem("friendOpponent", opponent);
+        // $location.path("/multiLoad");
+      }
     });
   };
 

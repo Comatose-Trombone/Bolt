@@ -330,10 +330,6 @@ module.exports = {
       res.send(data);
     });
   },
-    // .then(function () {
-      //find opponent and add a challenge
-  
-  
   // Fetches a user's array of challenges to render them on 'Challenges' page
   fetchChallenges : function (req, res, next) {
     var username = req.body.username;

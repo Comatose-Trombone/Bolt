@@ -26,8 +26,14 @@ angular.module('multiload.controller', ['bolt.profile'])
 
   // Find runners in an area given by the geoQuery object
   var search = function (geoQuery) {
-    console.log('searching');
+
+    if ($location.path() !== "/multiLoad") {
+      geoFire.remove(session.username).then(function () {});
+      $interval.cancel(stop);
+    }
+
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
+
       // create a session out of the two users' usernames
       if (key !== session.username) {
         var id = [session.username, key].sort().join('');
@@ -63,6 +69,7 @@ angular.module('multiload.controller', ['bolt.profile'])
 
     //stop is kind of misnamed here
     stop = $interval(function () {
+      console.log('stop called');
       search(geoQuery);
     }, 2000);
 
@@ -86,44 +93,42 @@ angular.module('multiload.controller', ['bolt.profile'])
   };
 
   var cancelSearch = function () {
-    geoFire.remove(session.username).then(function () {});
-    $interval.cancel(stop);
     $location.path('/bolt');
   };
 
-    var searchFriend = function (geoQuery) {
-    console.log('searching');
-    var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
-      // create a session out of the two users' usernames
-      if (key === session.username) {
-        var id = [session.username, key].sort().join('');
+  // var searchFriend = function (geoQuery) {
+  //   console.log('searching');
+  //   var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
+  //     // create a session out of the two users' usernames
+  //     if (key === session.username) {
+  //       var id = [session.username, key].sort().join('');
 
-        // This calculation should be placed in a factory
-        var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
-        var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
+  //       // This calculation should be placed in a factory
+  //       var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
+  //       var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
 
-        geoFire.remove(key).then(function () {});
-        //cancel the search
-        $interval.cancel(stop);
-        geoQuery.cancel();
+  //       geoFire.remove(key).then(function () {});
+  //       //cancel the search
+  //       $interval.cancel(stop);
+  //       geoQuery.cancel();
 
-        MultiGame.makeGame(id);
-        session.gameId = id;
-        session.competitor = key;
-        session.multiLat = destinationLat;
-        session.multiLng = destinationLng;
-        $location.path('multiGame');
-        return;
-      }
-    });
-  };
+  //       MultiGame.makeGame(id);
+  //       session.gameId = id;
+  //       session.competitor = key;
+  //       session.multiLat = destinationLat;
+  //       session.multiLng = destinationLng;
+  //       $location.path('multiGame');
+  //       return;
+  //     }
+  //   });
+  // };
 
 
   return {
     search: search,
     generateQuery: generateQuery,
     addUserGeoFire: addUserGeoFire,
-    cancelSearch: cancelSearch,
-    searchFriend: searchFriend
+    cancelSearch: cancelSearch
+    // searchFriend: searchFriend
   };
 });

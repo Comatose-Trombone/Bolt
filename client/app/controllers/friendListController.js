@@ -26,22 +26,11 @@ angular.module('bolt.friendList', [])
       var opponent = $scope.selected.username;
       raceFriends.submitLiveChallenge(user, opponent)
       .then(function (data) {
-        console.log('data', data);
+        // store the opponent in your session
+        $window.localStorage.setItem("friendOpponent", opponent);
+        // route to multiLoadController
+        $location.path("/multiLoad");
       });
-  };
-
-  $scope.sendChallenge = function () {
-    if ( $scope.selected === "" ) {
-      console.log('you must choose a friend first');
-    } else {
-
-      };
-
-
-
-
-
-      // $location.path('/multiLoad');
     };
   };
 

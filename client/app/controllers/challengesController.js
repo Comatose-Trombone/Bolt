@@ -4,18 +4,18 @@ angular.module('bolt.challenges', [])
 	$scope.challenges = [];
   $scope.session = $window.localStorage;
 
-	var fetchChallenges = function(username) {
+	var fetchChallenges = function (username) {
 		return $http({
-		  method: 'POST',
-		  url: '/api/users/challenges',
-		  data: {
-		    username: username,
-		  }
+			method: 'POST',
+			url: '/api/users/challenges',
+			data: {
+				username: username
+			}
 		})
 		.then( function (res) {
 			$scope.challenges = res.data;
-		})
-	}
+		});
+	};
 
 	fetchChallenges($scope.session.username);
 });
