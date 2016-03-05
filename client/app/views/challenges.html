@@ -12,10 +12,9 @@
 
 <div class="container">
   <ul class="collection">
-    <li ng-click="challengeRunStart()">Start Challenge</li>
     <li class="collection-item valign-wrapper" ng-repeat='challenge in challenges track by $index'>
-      <h3 class="valign"> {{ challenge.friend }}</h3>
-      <input type="submit" value="Accept Challenge" ng-click="challengeRunStart($index)"/>
+      <h6 class="valign">   You have a challenge from : {{ challenge.friend }},    Distance : {{challenge.totalDistance}},    Time to Beat : {{challenge.actualTime.slice(14,22)}}</h6>
+      <input class = "accept btn waves-effect waves-light" type="submit" value="Accept" ng-click="challengeRunStart($index)"/>
     </li>
   </ul>
 </div>

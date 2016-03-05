@@ -21,6 +21,7 @@ angular.module('challengerun.controller', [])
   $scope.hasHours = true;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
+  // $scope.inRange = true;
 
   var withinRangeOfStartPoint = false;
   var startTime;
@@ -53,6 +54,7 @@ angular.module('challengerun.controller', [])
       document.getElementById('map').style.height = "80vh";
       document.getElementById('botNav').style.height = "20vh";
     } else {
+      // $scope.inRange = false;
       // TODO: Add html that tells user they need to get closer to start point
     }
   };

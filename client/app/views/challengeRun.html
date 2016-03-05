@@ -15,6 +15,7 @@
     <div class ="medalTimes" ng-show="!raceStarted && !hasHours" >{{ bronzeTime ? "Bronze: " + bronzeTime.format('mm:ss') : ""}}</div>
     <div class ="medalTimes" ng-show="!raceStarted && !hasHours">{{ silverTime ? "Silver: " + silverTime.format('mm:ss') : "" }}</div>
     <div class ="medalTimes" ng-show="!raceStarted && !hasHours">{{ goldTime ? "Gold: " + goldTime.format('mm:ss') : "" }}</div>
+    
 
     <div class ="medalTimes" ng-show="raceStarted && hasHours">
       <div class="botLink" >{{ timeUntilCurrentMedal.format('hh:mm:ss') }} <img src="../assets/{{ currentMedal.toLowerCase() }}.png" class="medals"/> </div>

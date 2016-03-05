@@ -7,7 +7,7 @@ angular.module('achievements.controller', [])
       $scope.total = 0;
     } else {
       var medals = JSON.parse(session.achievements);
-      $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'] + medals['Trophy'];
+      $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
     };
     $scope.runs;
     $scope.showDetails = false;
@@ -54,6 +54,7 @@ angular.module('achievements.controller', [])
     };
 
     $scope.sendChallenge = function(run) {
+      run.friend = session.username
       Profile.sendChallengeRequest(run, $scope);
     };
     
@@ -65,8 +66,8 @@ angular.module('achievements.controller', [])
       medals['Gold'].toString(),
       medals['Silver'].toString(),
       medals['Bronze'].toString(),
-      medals['High Five'].toString(),
-      medals['Trophy'].toString()
+      medals['High Five'].toString()
+      // medals['Trophy'].toString()
     ];
     };
     //Gets the user's run
