@@ -1,12 +1,13 @@
 // This controller is tied to achievements.html
 angular.module('achievements.controller', [])
-  .controller('AchievementsController', function ($scope, $window,Profile) {
+  .controller('AchievementsController', function ($scope, $window, Profile) {
     var session = $window.localStorage;
     var medals = JSON.parse(session.achievements);
     $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
     $scope.runs;
     $scope.showDetails = false;
     $scope.theRun;
+    $scope.friend = "";
     var mainMap;
     var currentLocMarker;
     var destinationMarker;
@@ -44,6 +45,10 @@ angular.module('achievements.controller', [])
       $scope.showDetails = !$scope.showDetails;
       $scope.theRun = run;
       makeStaticMap(run);
+    };
+
+    $scope.sendChallenge = function(run) {
+      Profile.sendChallengeRequest(run, $scope);
     };
 
     var medalCounts = [

@@ -270,6 +270,19 @@ angular.module('bolt.services', [])
         }
       });
     };
+    var sendChallengeRequest = function (run, $scope) {
+      console.log("run is", run)
+      console.log("friendname is ", $scope.friend)
+      return $http({
+        method: 'POST',
+        url: '/api/users/challengeRequest',
+        data: {
+          run: run,
+          username: $scope.friend
+        }
+      }).then(function (res) { return res})
+
+    }
 
     var handleFriendRequest = function (action, self, newFriend) {
       return $http({
@@ -309,6 +322,7 @@ angular.module('bolt.services', [])
     };
 
   return {
+    sendChallengeRequest: sendChallengeRequest,
     updateUser: updateUser,
     getUser: getUser,
     sendFriendRequest: sendFriendRequest,
