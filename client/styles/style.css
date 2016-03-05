@@ -192,12 +192,17 @@ body{
   color: white;
   font-size: 2em;
 }
+.map {
+  display: block;
+  padding-top: 3vh;
 
+}
 .medalContainerOuter {
   display: block;
-  height: 25vh;
+  height: 10vh;
   margin-top: 1vh;
   float: right;
+  
 }
 
 .medalContainerInner {
@@ -358,6 +363,7 @@ body{
   margin-right: 1em;
 }
 
+
 .whiteOfflineCircle {
   background-color: rgba(0,0,0,0.5);
   border-radius: 99em;
@@ -365,6 +371,7 @@ body{
   height: 0.6em;
   margin-right: 1em; 
 }
+
 
 /******** Friend Dropdown ***********/
 .activeFriendIcon {
@@ -375,6 +382,7 @@ body{
   margin-top: 4.4em;
   width: 15em !important;
 }
+
 
 .smallButton {
   font-size: 0.85em;
@@ -403,7 +411,9 @@ body{
   height: 4.5em ;
 }
 
-
+.sendSoloChallenge {
+  z-index: 5;
+}
 /******** Home Button ***********/
 .bottom-align {
    position:absolute;

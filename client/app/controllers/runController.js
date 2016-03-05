@@ -73,9 +73,6 @@ angular.module('run.controller', [])
     var medal = $scope.$parent.achievement = $scope.currentMedal;
 
     var date = new Date();
-    console.log("initial loc", $scope.initialLoc);
-    console.log("dest", $scope.destination);
-    console.log("totaldistanceee", $scope.totalDistance);
     var endLocation = {
       latitude: $scope.destination.lat,
       longitude: $scope.destination.lng
@@ -87,7 +84,10 @@ angular.module('run.controller', [])
       name: "",
       date: date,
       totalDistance: $scope.totalDistance,
-      startLocation: $scope.initialLoc,
+      startLocation: {
+        latitude: $scope.initialLoc.latitude,
+        longitude: $scope.initialLoc.latitude
+      },
       endLocation: {
         longitude: $scope.destination.lng,
         latitude: $scope.destination.lat

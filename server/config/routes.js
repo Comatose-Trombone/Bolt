@@ -41,6 +41,9 @@ module.exports = function (app, express) {
   // Route to submit friend request
   app.post('/api/users/friendRequest', userController.submitFriendRequest);
 
+  // Route to submit friend request
+  app.post('/api/users/challengeRequest', userController.sendChallengeRequest);
+
   // Route to handle a friendRequestAction
   app.post('/api/users/handleFriendRequestAction', userController.handleFriendRequestAction);
 
