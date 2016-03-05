@@ -1,0 +1,30 @@
+<!-- Controller: challengeFinishController - client/app/controllers/finishController.js -->
+<nav>
+  <div class="nav-wrapper grey darken-3">
+    <a href="#/" class="brand-logo">Race Completed</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="#/profile" class="icon left">{{session.firstName}}</a></li>
+      <li><a href="#/achievements" class="icon right">Achievements</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- The runTime and achievement variables are set in the RunController upon finishing a run, using $scope.$parent. Since we are no longer nesting controllers, these variables are likely defined on $rootScope -->
+<div class="congrats">
+   <p ng-show="!challengeRace || winner">Congrats!</p>
+   <p ng-show="!winner">Oh no...</p>
+
+   <p ng-show="!challengeRace"> Your run time: {{ $scope.runTime }}</p>
+   <p style="margin-top:5vh" ng-show="!challengeRace">Medal earned </p>
+   <img ng-show="!challengeRace" src="../assets/{{achievement.toLowerCase()}}.png" height="90px" width="auto" />
+
+   <p style="margin-top:5vh" ng-show="challengeRace && winner">You won the challenge!</p>
+   <img ng-show="challengeRace && winner" src="../assets/Trophymedal.png" height="90px" width="auto" />
+
+   <p style="margin-top:5vh" ng-show="challengeRace && !winner">You lost the challenge</p>
+   <img ng-show="challengeRace && !winner" src="../assets/failure.png" height="90px" width="auto" />
+</div>
+<br><br><br><br>
+<div class="container profile center-align">
+  <span><a href="#/achievements" class="waves-effect waves-light grey darken-3 btn">Finish<a></span>
+</div>
