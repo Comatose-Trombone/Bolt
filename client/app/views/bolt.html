@@ -4,9 +4,17 @@
 <ul id="friendsListDropdown" class="dropdown-content" >
   <li class="friendRequestEntry valign-wrapper" ng-repeat='user in friendRequests track by $index'>
   <div class='friendRequestEntryContent'>
-  <span class="smallButton left">{{user}}</span>
-  <span class="smallButton right" ng-click="handleFriendRequest('reject', user)">Reject</span>
-  <span class="smallButton right" ng-click="handleFriendRequest('accept', user)">Accept</span>
+  <span class="smallButton">Friend Request: {{user}}</span><br>
+  <span class="smallButton options" ng-click="handleFriendRequest('accept', user)">Accept</span>
+  <span class="smallButton options" ng-click="handleFriendRequest('reject', user)">Reject</span>
+  </div>
+  </li>
+
+  <li class="friendRequestEntry valign-wrapper" ng-repeat='challenger in challengeList track by $index'>
+  <div class='friendRequestEntryContent'>
+  <span class="smallButton">{{challenger}} wants to race! </span><br>
+  <span class="smallButton options" ng-click="handleLiveChallengeRequest('accept', challenger)">Accept</span>
+  <span class="smallButton options" ng-click="handleLiveChallengeRequest('reject', challenger)">Reject</span>
   </div>
   </li>
 

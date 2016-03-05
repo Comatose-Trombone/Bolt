@@ -87,7 +87,7 @@ module.exports = {
     // This is tied to createProfile on the frontend, so users can update
     // their info
     var newData = req.body.newInfo;
-    var username = req.body.user.username;
+    var username = req.body.username;
     var user = {
       username: username
     };
@@ -310,30 +310,42 @@ module.exports = {
     console.log('submitLiveChallenge');
     var user = req.body.user;
     var opponent = req.body.opponent;
-    console.log(user, opponent);
-    //find user and add a challenge
-    findUser({username: user})
-    .then(function (founduser) {
-      // if ( user.challenge.opponent)
-      // console.log('before', founduser.currentChallenge);
-      founduser.challengeList.push(opponent);
-      // console.log('after', founduser.currentChallenge);
-      founduser.save(function(err) {
-        if (err) console.log('err');
-        else {
-          console.log('saved');
-          findUser({username: opponent})
-          .then(function (opponent) {
-            opponent.challengeList.push(user);
-            opponent.save(function() {
-              console.log('done');
-              res.send('challenge submitted');
-            });
-          });
-        }
+    var currentChallenge = {
+      match: false,
+      cancel: false,
+      opponent: opponent
+    };
+
+    User.findOneAndUpdate(
+      {username: user},
+      {$set: {currentChallenge: currentChallenge}},
+      {safe: true})
+    .then(function () {
+      User.findOneAndUpdate(
+        {username: opponent},
+        {$push: {challengeList: user} },
+        {safe: true})
+      .then(function (data) {
+        res.send(data);
       });
     });
   },
+
+
+  updateUserInfo: function (req, res, next) {
+    var username = req.body.username;
+    var newInfo = req.body.newInfo;
+    console.log(req.body);
+    User.findOneAndUpdate(
+      {username: username},
+      newInfo,
+      {safe: true})
+    .then(function (data) {
+      console.log('data after updateUserInfo', data);
+      res.send(data);
+    });
+  },
+
     // .then(function () {
       //find opponent and add a challenge
   
@@ -350,7 +362,6 @@ module.exports = {
       res.send(user.challenges);
     });
   }
-  
 };
 
 

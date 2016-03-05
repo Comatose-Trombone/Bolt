@@ -52,6 +52,9 @@ module.exports = function (app, express) {
 
   app.post('/api/users/submitLiveChallenge', userController.submitLiveChallenge);
 
+  // offers a flexible interface to edit user profile
+  app.post('/api/users/updateUserInfo', userController.updateUserInfo);
+
   // Route to handle fetching user's current list of challenges
   app.post('/api/users/challenges', userController.fetchChallenges);
   

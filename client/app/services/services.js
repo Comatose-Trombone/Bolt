@@ -237,7 +237,7 @@ angular.module('bolt.services', [])
           //a 'firstName' key in the incoming object in order to update the
           //'firstName' key in the User DB. If it's named something else
           //('first', 'firstname', 'firstN', etc.), it won't work
-          user: user
+          username: user
         }
       }).then(function (res) {
         return res;
@@ -307,13 +307,28 @@ angular.module('bolt.services', [])
       });
     };
 
+    /* Daniel Here - I wrote my own version of updateUser */
+    var updateUserInfo = function (newInfo, user) {
+      return $http({
+        method: 'POST',
+        url: '/api/users/updateUserInfo',
+        data: {
+          newInfo: newInfo,
+          username: user
+        }
+      }).then(function (res) {
+        return res;
+      });
+    };
+
   return {
     sendChallengeRequest: sendChallengeRequest,
     updateUser: updateUser,
     getUser: getUser,
     sendFriendRequest: sendFriendRequest,
     handleFriendRequest: handleFriendRequest,
-    getFriends: getFriends
+    getFriends: getFriends,
+    updateUserInfo: updateUserInfo
   };
 })
 
@@ -440,7 +455,7 @@ angular.module('bolt.services', [])
   };
 })
 
-.factory('raceFriends', function($http, $location, $window) {
+.factory('raceFriends', function ($http, $location, $window) {
   var submitLiveChallenge = function (user, opponent) {
     return $http({
       method: 'POST',
@@ -451,14 +466,14 @@ angular.module('bolt.services', [])
       }
     }).then(function (res) {
       return res;
-    })
+    });
   };
 
 
 
   return {
     submitLiveChallenge: submitLiveChallenge
-  }
+  };
 });
 
 
