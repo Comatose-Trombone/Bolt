@@ -7,22 +7,15 @@
           <span class="progressInfoUser">Progress: {{percentComplete + "%"}}</span>
       </div>
     </div>
-    <!-- Much of the logic here is to avoid showing an hour placeholder if the expected run time is less than an hour -->
-    <div class ="medalTimes" ng-show="!raceStarted">{{ totalDistance ? "Total Distance: " + totalDistance + " miles": "" }} </div>
-    <div class ="medalTimes" ng-show="!raceStarted && hasHours">{{ bronzeTime ? "Bronze: " + bronzeTime.format('hh:mm:ss') : ""}}</div>
-    <div class ="medalTimes" ng-show="!raceStarted && hasHours">{{ silverTime ? "Silver: " + silverTime.format('hh:mm:ss') : "" }}</div>
-    <div class ="medalTimes" ng-show="!raceStarted && hasHours">{{ goldTime ? "Gold: " + goldTime.format('hh:mm:ss') : "" }}</div>
-    <div class ="medalTimes" ng-show="!raceStarted && !hasHours" >{{ bronzeTime ? "Bronze: " + bronzeTime.format('mm:ss') : ""}}</div>
-    <div class ="medalTimes" ng-show="!raceStarted && !hasHours">{{ silverTime ? "Silver: " + silverTime.format('mm:ss') : "" }}</div>
-    <div class ="medalTimes" ng-show="!raceStarted && !hasHours">{{ goldTime ? "Gold: " + goldTime.format('mm:ss') : "" }}</div>
-    
 
     <div class ="medalTimes" ng-show="raceStarted && hasHours">
-      <div class="botLink" >{{ timeUntilCurrentMedal.format('hh:mm:ss') }} <img src="../assets/{{ currentMedal.toLowerCase() }}.png" class="medals"/> </div>
+      <div class="botLink timeToBeat" >Time to Beat: {{timeToBeat}}</div>
+      <div class="botLink currentTime">Your Time: {{ runTime.format('hh:mm:ss') }}</div>
       <a class="botLink right" href="#/"> x </a>
     </div>
     <div class ="medalTimes" ng-show="raceStarted && !hasHours">
-      <div class="botLink" >{{ timeUntilCurrentMedal.format('mm:ss') }} <img src="../assets/{{ currentMedal.toLowerCase() }}.png" class="medals"/> </div>
+      <div class="botLink timeToBeat" >Time to Beat: {{timeToBeat}}</div>
+      <div class="botLink currentTime" >Your Time: {{ runTime.format('mm:ss') }}</div>
       <a class="botLink right" href="#/"> x </a>
     </div>
     <div class ="medalTimes">

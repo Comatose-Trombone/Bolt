@@ -4,7 +4,6 @@ angular.module('bolt.services', [])
 .factory('Geo', function ($window) {
   var session = $window.localStorage;
   var mainMap;
-  var currentLocMarker;
   var destinationMarker;
   var directionsService = new google.maps.DirectionsService();
   var directionsRenderer = new google.maps.DirectionsRenderer();
@@ -50,14 +49,14 @@ angular.module('bolt.services', [])
       //get the directions
       directionsRenderer.setMap(mainMap);
       //put down marker
-      currentLocMarker = new google.maps.Marker({
+      $scope.currentLocMarker = new google.maps.Marker({
         position: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
         map: mainMap,
         animation: google.maps.Animation.DROP,
         icon: '/assets/bolt.png'
       });
       //set the start/end routes, based on the current location and the destination
-      var startOfRoute = new google.maps.LatLng(currentLocMarker.position.lat(), currentLocMarker.position.lng());
+      var startOfRoute = new google.maps.LatLng($scope.currentLocMarker.position.lat(), $scope.currentLocMarker.position.lng());
       var endOfRoute = new google.maps.LatLng(destinationCoordinates.lat, destinationCoordinates.lng);
       $scope.destination = {
         lat: endOfRoute.lat(),
@@ -124,11 +123,11 @@ angular.module('bolt.services', [])
       };
     }
     navigator.geolocation.getCurrentPosition(function (position) {
-      currentLocMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+      $scope.currentLocMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
       if ($scope) {
         $scope.userLocation = {
-          lat: currentLocMarker.position.lat(),
-          lng: currentLocMarker.position.lng()
+          lat: $scope.currentLocMarker.position.lat(),
+          lng: $scope.currentLocMarker.position.lng()
         };
         if (prevLocation) {
           $scope.percentComplete = calculatePercentageRouteRun($scope, prevLocation, $scope.userLocation);
@@ -152,7 +151,8 @@ angular.module('bolt.services', [])
   return {
     makeInitialMap: makeInitialMap,
     updateCurrentPosition: updateCurrentPosition,
-    distBetween: distBetween
+    distBetween: distBetween,
+    calculatePercentageRouteRun: calculatePercentageRouteRun
   };
 
 })
@@ -462,7 +462,7 @@ angular.module('bolt.services', [])
   };
 })
 
-.factory('soloChallenge', function ($http, $location, $window) {
+.factory('soloChallenge', function ($http, $location, $window, Geo) {
   var session = $window.localStorage;
   var mainMap;
   var currentLocMarker;
@@ -494,7 +494,7 @@ angular.module('bolt.services', [])
       //get the directions
       directionsRenderer.setMap(mainMap);
       //put down marker
-      currentLocMarker = new google.maps.Marker({
+      $scope.currentLocMarker = new google.maps.Marker({
         // TODO: Change this to user's current location, along with center for mainMap, to validate user's starting point of run
         position: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
         map: mainMap,
@@ -512,6 +512,19 @@ angular.module('bolt.services', [])
         provideRouteAlternatives: false
       }, function (response, status) {
         directionsRenderer.setDirections(response);
+        var totalDistance = 0;
+        // Add up distance for all legs of the journey
+        for (var i = 0; i < response.routes[0].legs.length; i++) {
+          //distance is a human-readable string.
+          var distance = response.routes[0].legs[i].distance.text;
+          if (distance.substring(distance.length - 2) === "ft") {
+            //convert the distance from feet to miles
+            distance = (distance.substring(0, distance.length - 3) / 5280).toString().substring(0, 3) + " mi";
+          }
+          totalDistance += distance;
+        }
+        totalDistance = parseFloat(totalDistance) || 0.1; // If run distance is small display 0.1 miles
+        $scope.totalDistance = totalDistance;
       });
     };
 
@@ -521,8 +534,32 @@ angular.module('bolt.services', [])
     }, $scope);
   };
 
+  var updateCurrentPosition = function ($scope) {
+    if ($scope.userLocation) {
+      var prevLocation = {
+        lat: $scope.userLocation.lat,
+        lng: $scope.userLocation.lng
+      };
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      $scope.currentLocMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+      if ($scope) {
+        $scope.userLocation = {
+          lat: $scope.currentLocMarker.position.lat(),
+          lng: $scope.currentLocMarker.position.lng()
+        };
+        if (prevLocation) {
+          $scope.percentComplete = Geo.calculatePercentageRouteRun($scope, prevLocation, $scope.userLocation);
+        }
+      }
+    }, function (err) {
+      console.error(err);
+    });
+  };
+
   return {
-    makeInitialMap: makeInitialMap
+    makeInitialMap: makeInitialMap,
+    updateCurrentPosition: updateCurrentPosition
   };
 });
 

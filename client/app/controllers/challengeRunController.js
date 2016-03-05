@@ -2,9 +2,10 @@ angular.module('challengerun.controller', [])
 
 .controller('challengeRunController',
   function ($scope, $timeout, $interval, $window,
-            $location, $route, soloChallenge, Run, Profile, Geo) {
+            $location, $route, $rootScope, soloChallenge, Run, Profile, Geo) {
 
   $scope.session = $window.localStorage;
+  $scope.timeToBeat = $scope.session.timeToBeat;
   $scope.initialLoc = {
     lat: $scope.session.challengeStartLat,
     lng: $scope.session.challengeStartLng
@@ -15,17 +16,15 @@ angular.module('challengerun.controller', [])
     lng: $scope.session.challengeEndLng
   };
   $scope.raceStarted;
+  $scope.runTime = 0;
 
-  console.log($scope.session);
-
-  $scope.hasHours = true;
+  $scope.hasHours = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
   // $scope.inRange = true;
 
-  var withinRangeOfStartPoint = false;
+  var withinRangeOfStartPoint = true;
   var startTime;
-  var runTime;
   var statusUpdateLoop;
   var startLat;
   var startLong;
@@ -37,7 +36,7 @@ angular.module('challengerun.controller', [])
   // Update run timer
   var updateTotalRunTime = function () {
     var secondsRan = moment().diff(startTime, 'seconds');
-    runTime = moment().minute(0).second(secondsRan);
+    $scope.runTime = moment().minute(0).second(secondsRan);
   };
 
   // Start the race: starts race timer and update loop
@@ -64,27 +63,34 @@ angular.module('challengerun.controller', [])
 
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
-    $scope.$parent.runTime = runTime.format('mm:ss');
-    var medal = $scope.$parent.achievement = $scope.currentMedal;
+    // TODO: this determination of who wins only works if the total run time is less than 1 hour, need to change how timing is done to fix this
+    // Calculate total time in seconds
+    var totalTimeArray = $scope.runTime.format('mm:ss').split(':');
+    var totalTimeInSeconds = ((totalTimeArray[0] * 60) + totalTimeArray[1]);
+    // Calculate timeToBeat in seconds, first need to do some string manipulation to get it into correct form
+    var timeToBeatWithColons = $scope.timeToBeat.replace('.', ':');
+    var timeToBeatArray = timeToBeatWithColons.split(':');
+    var timeToBeatInSeconds = ((timeToBeatArray[1] * 60) + timeToBeatArray[2]);
+    // Determine if user won challenge by comparing their total time with the time to beat
+    var challengeWon = totalTimeInSeconds <= timeToBeatInSeconds;
+
+    $rootScope.challengeWinner = true;
+    var medal = challengeWon ? 'Trophy' : null;
 
     var date = new Date();
-    console.log("initial loc", $scope.initialLoc);
-    var endLocation = {
-      latitude: $scope.destination.lat,
-      longitude: $scope.destination.long
-    };
-    var googleExpectedTime = null;
-    var actualTime = runTime;
 
     var currentRunObject = {
+      name: "",
       date: date,
-      startLocation: $scope.initialLoc,
-      endLocation: {
-        longitude: $scope.destination.long,
-        latitude: $scope.destination.lat
+      startLocation: {
+        latitude: $scope.initialLoc.lat,
+        longitude: $scope.initialLoc.lng
       },
-      googleExpectedTime: null,
-      actualTime: runTime,
+      endLocation: {
+        latitude: $scope.destination.lat,
+        longitude: $scope.destination.lng
+      },
+      actualTime: $scope.runTime,
       medalReceived: medal,
       racedAgainst: null
     };
@@ -92,6 +98,8 @@ angular.module('challengerun.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
+      var number = user.runs.length + 1;
+      currentRunObject.name = "Route " + number;
       var achievements = user.achievements;
       var previousRuns = user.runs;
       //update achievments object
@@ -103,8 +111,10 @@ angular.module('challengerun.controller', [])
         achievements: achievements,
         runs: previousRuns
       };
-      Profile.updateUser(updatedAchievementsData, user)
+      console.log(user.username);
+      Profile.updateUserInfo(updatedAchievementsData, user.username)
       .then(function (updatedProfile) {
+        console.log(updatedProfile);
         return updatedProfile;
       })
       .catch(function (err) {
@@ -120,9 +130,9 @@ angular.module('challengerun.controller', [])
   var checkIfFinished = function () {
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
-      if (distRemaining < FINISH_RADIUS) {
+      // if (distRemaining < FINISH_RADIUS) {
         finishRun();
-      }
+      // }
     }
   };
 
@@ -138,7 +148,7 @@ angular.module('challengerun.controller', [])
 
   // Update geographical location and timers. Update progress bar via calculating percentage total route completed.
   var updateStatus = function () {
-    Geo.updateCurrentPosition($scope);
+    soloChallenge.updateCurrentPosition($scope);
     updateTotalRunTime();
     checkIfFinished();
   };
