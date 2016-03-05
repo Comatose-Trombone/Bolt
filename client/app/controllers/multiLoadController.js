@@ -57,11 +57,13 @@ angular.module('multiload.controller', ['bolt.profile'])
       console.log(session.friendOpponent);
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
+          console.log('hello');
           bool = true;
         }
       } else {
         if ( key !== session.username ) {
           var id = [session.username, key].sort().join('');
+          bool = true;
         }
       }
       if ( bool ) {
