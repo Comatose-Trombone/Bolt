@@ -428,19 +428,7 @@ angular.module('bolt.services', [])
       url: '/api/users/signout'
     })
     .then(function (data) {
-      console.log('successfully signed out');
-      $window.localStorage.removeItem('username');
-      $window.localStorage.removeItem('first');
-      $window.localStorage.removeItem('last');
-      $window.localStorage.removeItem('firstName');
-      $window.localStorage.removeItem('lastName');
-      $window.localStorage.removeItem('phone');
-      $window.localStorage.removeItem('email');
-      $window.localStorage.removeItem('competitor');
-      $window.localStorage.removeItem('preferredDistance');
-      $window.localStorage.removeItem('runs');
-      $window.localStorage.removeItem('achievements');
-      $window.localStorage.removeItem('com.bolt');
+      $window.localStorage.clear();
       $location.path('/signin');
     });
   };

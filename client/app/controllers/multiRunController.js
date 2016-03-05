@@ -240,10 +240,11 @@ angular.module('multirun.controller', [])
   var storeAndFetchProgress = function (progress) {
     var field = userNum + "Progress";
     MultiGame.updateGame(session.gameId, field, progress)
-      .then( function (game) {
-        var field = oppNum + "Progress";
-        $scope.oppPercentComplete = game.field;
-      });
+    .then(function (game) {
+      var field = oppNum + "Progress";
+      $scope.oppPercentComplete = game.field;
+    });
+
   };
 
 

@@ -12,7 +12,6 @@ angular.module('bolt.challenges', [])
     $window.localStorage.setItem('challengeEndLat', challengeInfo.endLocation.lat);
     $window.localStorage.setItem('challengeEndLng', challengeInfo.endLocation.lng);
     $window.localStorage.setItem('timeToBeat', challengeInfo.actualTime);
-
     $location.path('/challengerun');
   };
 

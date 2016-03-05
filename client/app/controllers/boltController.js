@@ -40,10 +40,6 @@ angular.module('bolt.controller', [])
       $location.path('/run');
     } else if (document.getElementById("switch_3_center").checked) {
       $location.path('/friendList');
-      // Running with friends has not been implemented yet, this is a
-      // placeholder for when this functionality has been developed.
-      // For now redirect runners to solo run.
-      // $location.path('/run');
     } else {
       // Public run
       $location.path('/multiLoad');
@@ -65,22 +61,53 @@ angular.module('bolt.controller', [])
     });
   };
 
-  $scope.handleLiveChallengeRequest = function (action, challenger) {
-    var newInfo = {
-      $pull: {challengeList: challenger},
-      $set: {currentChallenge: {
-        challenger: challenger,
-        match: true,
-        cancel: false
-        }
-      }
+  $scope.handleLiveChallengeAccept = function (opponent) {
+    var currentChallenge = {
+      opponent: opponent,
+      match: false,
+      cancel: false };
+
+    var updateUser = {
+      $pull: {challengeList: opponent},
+      $set: {currentChallenge: currentChallenge}
     };
 
-    Profile.updateUserInfo(newInfo, this.session.username)
+    Profile.updateUserInfo(updateUser, this.session.username)
     .then(function (data) {
-      console.log(data);
+      window.localStorage.setItem("friendOpponent", opponent);
+      $location.path("/multiLoad");
     });
   };
+
+  $scope.handleLiveChallengeReject = function (opponent) {
+    // edit the current user, delete from the challengeList
+    updateUser = {
+      $pull: {challengeList: opponent}
+    };
+
+    Profile.updateUserInfo(updateUser, this.session.username)
+    .then(function (data) {
+      console.log('you rejected the challenge.', data);
+    });
+
+    var currentChallenge = {
+      opponent: opponent,
+      match: false,
+      cancel: true };
+
+    // also update the opponent that you cancelled.
+    var updateOpponent = {
+      $set: { currentChallenge: currentChallenge }
+    };
+
+    Profile.updateUserInfo(updateOpponent, opponent)
+    .then(function (data) {
+      console.log('your opponent has been notified that you cancelled.', data);
+    });
+  };
+
+
+
 
   $scope.$on('$destroy', function () {
     $interval.cancel(checkFriendRequestsInterval);
