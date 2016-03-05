@@ -63,6 +63,7 @@ angular.module('multiload.controller', ['bolt.profile'])
       } else {
         if ( key !== session.username ) {
           var id = [session.username, key].sort().join('');
+          bool = true;
         }
       }
       if ( bool ) {
