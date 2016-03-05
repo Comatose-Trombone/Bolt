@@ -3,6 +3,9 @@ angular.module('bolt.challenges', [])
 .controller('challengesController', function ($scope, $location, $window, $http) {
   $scope.challenges = [];
   $scope.session = $window.localStorage;
+  $scope.challengeShow;
+  
+  
 
   $scope.challengeRunStart = function (index) {
     var challengeInfo = $scope.challenges[index];
@@ -25,6 +28,12 @@ angular.module('bolt.challenges', [])
     })
     .then( function (res) {
       $scope.challenges = res.data;
+      console.log("challenge is" , $scope.challenges)
+      if ($scope.challenges.length === 0) {
+      $scope.challengeShow = false;
+      } else {
+      $scope.challengeShow = true;
+  }
     });
   };
 

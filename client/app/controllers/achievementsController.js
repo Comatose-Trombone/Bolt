@@ -56,6 +56,7 @@ angular.module('achievements.controller', [])
     $scope.sendChallenge = function(run) {
       run.friend = session.username
       Profile.sendChallengeRequest(run, $scope);
+      $scope.friend= "";
     };
     
     

@@ -74,11 +74,7 @@ var UserSchema = new mongoose.Schema({
   },
   challenges: {
     type: Array,
-    default: [ {
-      startLocation: {lat: 37.789, lng: -122.379},
-      endLocation: {lat: 37.760, lng: -122.360},
-      timeToBeat: null
-    } ]
+    default: []
   }
 });
 
