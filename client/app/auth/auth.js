@@ -6,7 +6,7 @@ angular.module('bolt.auth', [])
   $scope.signin = function () {
     Auth.signin($scope.user)
       .then(function (session) {
-        $window.localStorage.setItem('friendOpponent', "");
+        $window.localStorage.setItem('friendOpponent', session.friendOpponent);
         $window.localStorage.setItem('com.bolt', session.token);
         $window.localStorage.setItem('username', session.username);
         $window.localStorage.setItem('firstName', session.firstName);
@@ -18,6 +18,7 @@ angular.module('bolt.auth', [])
         $window.localStorage.setItem('achievements', session.achievements);
         //NOTE: session.friendRequest is stored as a string, not an array.
         $window.localStorage.setItem('friendRequests', session.friendRequests);
+        console.log('in Auth', $window.localStorage);
         $location.path('/');
       })
       .catch(function (error) {

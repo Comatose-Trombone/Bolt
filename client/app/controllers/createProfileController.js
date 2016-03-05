@@ -7,6 +7,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   // will set the new data to $scope (so it's accessible to other controllers)
   // and update the user in our Mongo DB
   $scope.createProfile = function (inputData) {
+    console.log('inputdata', inputData);
     $location.path('/profile');
     newData = {
       firstName: $scope.session.firstName,
@@ -37,7 +38,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
     });
   };
 
-  $scope.session = window.localStorage;
+  $scope.session = $window.localStorage;
 
   // Give signout ability to $scope
   $scope.signout = function () {

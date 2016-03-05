@@ -356,7 +356,7 @@ body{
 }
 
 .greenOnlineCircle {
-  background-color: green;
+  background-color: rgb(91, 245, 91);
   border-radius: 99em;
   width: 0.6em;
   height: 0.6em;

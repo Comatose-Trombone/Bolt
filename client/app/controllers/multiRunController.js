@@ -33,6 +33,7 @@ angular.module('multirun.controller', [])
 
   // Determine whether current user is user1 or user2 in multiplayer game
   // database instance
+
   if (session.username > session.competitor) {
     userNum = "user1";
     oppNum = "user2";
@@ -63,6 +64,11 @@ angular.module('multirun.controller', [])
             $interval.cancel(statusUpdateLoop);
           }
           $interval.cancel(checkCancelled);
+          
+          // add a checker in here to see if race was finished, or cancelled.
+          console.log('pathing to bolt');
+
+
           $location.path('/');
         }
       });
@@ -75,6 +81,10 @@ angular.module('multirun.controller', [])
     $interval.cancel(checkCancelled);
     $interval.cancel(stopCheck);
     $interval.cancel(stopFinish);
+
+    // reset the friendOpponent prop on localStorage
+    $window.localStorage.setItem('friendOpponent', "");
+
     MultiGame.updateGame(session.gameId, 'cancelled');
   };
 
@@ -215,6 +225,10 @@ angular.module('multirun.controller', [])
       };
       Profile.updateUser(updatedAchievementsData, user)
       .then(function (updatedProfile) {
+
+        //DESTROY THE GAME AFTER YOU WIN
+        MultiGame.removeGame(session.gameId);
+
         return updatedProfile;
       })
       .catch(function (err) {
@@ -262,8 +276,6 @@ angular.module('multirun.controller', [])
 
   $scope.$on('$destroy', function () {
     console.log('DESTROYED!!!!!!');
-    $interval.cancel(statusUpdateLoop);
-    $interval.cancel(checkCancelled);
-    MultiGame.updateGame(session.gameId, 'cancelled');
+    $scope.raceCancelledOrFinished();
   });
 });

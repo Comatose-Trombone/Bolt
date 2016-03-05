@@ -18,6 +18,7 @@ module.exports = {
     // see if they exist...
     findUser({username: username})
     .then(function (user) {
+      console.log('user', user);
       if (!user) {
         // ...if we can't find them, throw error
         next(new Error('User does not exist'));
@@ -43,7 +44,8 @@ module.exports = {
               preferredDistance: user.preferredDistance,
               runs: JSON.stringify(user.runs),
               achievements: JSON.stringify(user.achievements),
-              friendRequests: user.friendRequests
+              friendRequests: user.friendRequests,
+              friendOpponent: ""
             });
           } else {
             return next(new Error('No user'));

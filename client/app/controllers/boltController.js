@@ -6,7 +6,11 @@ angular.module('bolt.controller', [])
   $scope.session = $window.localStorage;
   $scope.friendRequests = [];
   $scope.challengeList = [];
+
+  console.log ('session in boltcontroller', $scope.session);
+
   var checkForFriendRequests = function () {
+    
     Profile.getUser()
     .then(function (user) {
       // set friend and challenge requests
@@ -74,7 +78,7 @@ angular.module('bolt.controller', [])
 
     Profile.updateUserInfo(updateUser, this.session.username)
     .then(function (data) {
-      window.localStorage.setItem("friendOpponent", opponent);
+      $window.localStorage.setItem("friendOpponent", opponent);
       $location.path("/multiLoad");
     });
   };
