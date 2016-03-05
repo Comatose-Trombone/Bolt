@@ -7,7 +7,7 @@ angular.module('achievements.controller', [])
       $scope.total = 0;
     } else {
       var medals = JSON.parse(session.achievements);
-      $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
+      $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'] + medals['Trophy'];
     };
     $scope.runs;
     $scope.showDetails = false;
@@ -19,7 +19,7 @@ angular.module('achievements.controller', [])
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     var route;
-    var medalCounts=[];
+    var medalCounts;
     // Use numeric strings for medal counts to display in d3
     var makeStaticMap = function (run) {
       var startLoc = run.startLocation;
@@ -66,8 +66,8 @@ angular.module('achievements.controller', [])
       medals['Gold'].toString(),
       medals['Silver'].toString(),
       medals['Bronze'].toString(),
-      medals['High Five'].toString()
-      // medals['Trophy'].toString()
+      medals['High Five'].toString(),
+      medals['Trophy'].toString()
     ];
     };
     //Gets the user's run
