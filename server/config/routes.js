@@ -52,9 +52,9 @@ module.exports = function (app, express) {
   // offers a flexible interface to edit user profile
   app.post('/api/users/updateUserInfo', userController.updateUserInfo);
 
-
-
-
+  // Route to handle fetching user's current list of challenges
+  app.post('/api/users/challenges', userController.fetchChallenges);
+  
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler
   app.use(helpers.errorLogger);

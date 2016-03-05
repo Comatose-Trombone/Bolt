@@ -329,6 +329,22 @@ module.exports = {
       console.log('data after updateUserInfo', data);
       res.send(data);
     });
+  },
+    // .then(function () {
+      //find opponent and add a challenge
+  
+  
+  // Fetches a user's array of challenges to render them on 'Challenges' page
+  fetchChallenges : function (req, res, next) {
+    var username = req.body.username;
+
+    findUser({username: username})
+    .then( function (user) {
+      if (!user) {
+        next( new Error('Cannot find user with that username'));
+      }
+      res.send(user.challenges);
+    });
   }
 };
 
