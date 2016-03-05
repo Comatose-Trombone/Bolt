@@ -49,8 +49,10 @@ module.exports = function (app, express) {
 
   app.post('/api/users/submitLiveChallenge', userController.submitLiveChallenge);
 
-  // allows a user to accept or reject a live challenge request
-  app.post('/api/users/handleLiveChallengeRequest', userController.handleLiveChallengeRequest);
+  // offers a flexible interface to edit user profile
+  app.post('/api/users/updateUserInfo', userController.updateUserInfo);
+
+
 
 
   // If a request is sent somewhere other than the routes above,

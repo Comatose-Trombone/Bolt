@@ -205,7 +205,7 @@ angular.module('bolt.services', [])
           //a 'firstName' key in the incoming object in order to update the
           //'firstName' key in the User DB. If it's named something else
           //('first', 'firstname', 'firstN', etc.), it won't work
-          user: user
+          username: user
         }
       }).then(function (res) {
         return res;
@@ -262,16 +262,14 @@ angular.module('bolt.services', [])
       });
     };
 
-    // This is a general function which will allow you to either add or remove
-    // elements from an array stored inside mongo
-    var handleLiveChallengeRequest = function (username, opponent, action) {
+    /* Daniel Here - I wrote my own version of updateUser */
+    var updateUserInfo = function (newInfo, user) {
       return $http({
         method: 'POST',
-        url: '/api/users/handleLiveChallengeRequest',
+        url: '/api/users/updateUserInfo',
         data: {
-          username: username,
-          opponent: opponent,
-          action: action
+          newInfo: newInfo,
+          username: user
         }
       }).then(function (res) {
         return res;
@@ -284,7 +282,7 @@ angular.module('bolt.services', [])
     sendFriendRequest: sendFriendRequest,
     handleFriendRequest: handleFriendRequest,
     getFriends: getFriends,
-    handleLiveChallengeRequest: handleLiveChallengeRequest
+    updateUserInfo: updateUserInfo
   };
 })
 

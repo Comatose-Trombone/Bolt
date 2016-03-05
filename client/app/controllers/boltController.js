@@ -66,13 +66,22 @@ angular.module('bolt.controller', [])
   };
 
   $scope.handleLiveChallengeRequest = function (action, challenger) {
-    Profile.handleLiveChallengeRequest(this.session.username, challenger, action)
+    var newInfo = {
+      $pull: {challengeList: challenger},
+      $set: {currentChallenge: {
+        challenger: challenger,
+        match: true,
+        cancel: false
+        }
+      }
+    };
+
+    Profile.updateUserInfo(newInfo, this.session.username)
     .then(function (data) {
-      console.log('data', data);
+      console.log(data);
     });
   };
 
-  // Stops the interval when you route away from the Profile Page
   $scope.$on('$destroy', function () {
     $interval.cancel(checkFriendRequestsInterval);
   });

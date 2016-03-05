@@ -87,7 +87,7 @@ module.exports = {
     // This is tied to createProfile on the frontend, so users can update
     // their info
     var newData = req.body.newInfo;
-    var username = req.body.user.username;
+    var username = req.body.username;
     var user = {
       username: username
     };
@@ -317,27 +317,17 @@ module.exports = {
     });
   },
 
-  handleLiveChallengeRequest: function (req, res, next) {
+  updateUserInfo: function (req, res, next) {
     var username = req.body.username;
-    var opponent = req.body.opponent;
-    var action = req.body.action;
-
-    var currentChallenge = {
-      match: false,
-      cancel: false,
-      opponent: opponent
-    };
-
-    // delete the challenge request, and set the current Challenge
+    var newInfo = req.body.newInfo;
+    console.log(req.body);
     User.findOneAndUpdate(
       {username: username},
-      {
-        $pull: {challengeList: opponent},
-        $set: {currentChallenge: currentChallenge}
-      },
+      newInfo,
       {safe: true})
-    .then(function (user) {
-      res.send(user);
+    .then(function (data) {
+      console.log('data after updateUserInfo', data);
+      res.send(data);
     });
   }
 };
