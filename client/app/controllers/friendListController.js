@@ -31,23 +31,6 @@ angular.module('bolt.friendList', [])
         // route to multiLoadController
         $location.path("/multiLoad");
       });
-<<<<<<< HEAD
-=======
-  };
-
-  $scope.sendChallenge = function () {
-    if ( $scope.selected === "" ) {
-      console.log('you must choose a friend first');
-    } else {
-
-    }
-
-
-
-
-
-      // $location.path('/multiLoad');
->>>>>>> 500f05cb663f20a3dd8c16be4ccf81dc600ccdf4
     };
   };
 
