@@ -23,7 +23,6 @@ angular.module('multiload.controller', ['bolt.profile'])
   var currentUser;
   var userPosition;
   var stop;
-  var bool;
 
   var checkIfFriendCancel = function () {
     Profile.getUser(session.username)
@@ -49,16 +48,20 @@ angular.module('multiload.controller', ['bolt.profile'])
     }
 
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
+      var bool = false;
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
+      console.log('key', key);
       console.log('session multiload', session, session.friendOpponent === "");
       if ( session.friendOpponent !== "" ) {
+        console.log('session.friendOpponent:', session.friendOpponent);
         if ( key === session.friendOpponent ) {
           bool = true;
         }
       } else {
         if ( key !== session.username ) {
           var id = [session.username, key].sort().join('');
+          console.log('id', id);
           bool = true;
         }
       }
@@ -66,7 +69,6 @@ angular.module('multiload.controller', ['bolt.profile'])
         // This calculation should be placed in a factory
         var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
         var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
-
         geoFire.remove(key).then(function () {});
         //cancel the search
         $interval.cancel(stop);

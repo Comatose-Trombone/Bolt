@@ -75,6 +75,10 @@ angular.module('multirun.controller', [])
     $interval.cancel(checkCancelled);
     $interval.cancel(stopCheck);
     $interval.cancel(stopFinish);
+
+    // reset the friendOpponent prop on localStorage
+    $window.localStorage.setItem('friendOpponent', "");
+
     MultiGame.updateGame(session.gameId, 'cancelled');
   };
 
@@ -262,8 +266,6 @@ angular.module('multirun.controller', [])
 
   $scope.$on('$destroy', function () {
     console.log('DESTROYED!!!!!!');
-    $interval.cancel(statusUpdateLoop);
-    $interval.cancel(checkCancelled);
-    MultiGame.updateGame(session.gameId, 'cancelled');
+    $scope.raceCancelledOrFinished();
   });
 });
