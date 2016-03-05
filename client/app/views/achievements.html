@@ -10,6 +10,23 @@
 </nav>
 
 <!-- Could implement ng-repeat here -->
+  
+  <div class= "runsTitle"> Saved Runs </div>
+  <div style="overflow: scroll; width: 200px; height:200px;" class="runHistory">
+    <div ng-repeat="run in runs">
+        <a ng-click="toggleShowDetails(run)">{{run.name}}</a>
+    </div>
+  </div>
+    <div class="details" ng-show="showDetails">
+      <div id= "static-map">
+      </div>
+      <p>Date of Run: {{theRun.date.slice(0,10)}}</p>
+      <p>Total Distance: {{theRun.totalDistance}} mile </p>
+      <p>Run Time: {{theRun.actualTime.slice(14,22)}}</p>
+      <p>Medal Received: {{theRun.medalReceived}}</p>
+
+    </div>
+  
 <div class="medalContainerOuter center-align">
   <div class="medalContainerInner">
     <img src="../assets/gold.png" class="icon" />
@@ -28,9 +45,7 @@
     <div class="count number"> &nbsp; x &nbsp; <span class="number">0</span></div>
   </div>
   <div class="total"> Total Runs: {{ total }} </div>
-  <br>
-  <br>
-  <div class="container profile center-align">
+</div>
+  <div class="container profile center-align bottom-align">
     <span><a href="#/" class="waves-effect waves-light grey darken-3 btn">Home<a></span>
   </div>
-</div>

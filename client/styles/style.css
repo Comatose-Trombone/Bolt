@@ -39,6 +39,9 @@ html, body {
   display: inline;
   float: left;
   height: 100%;
+<<<<<<< HEAD
+/*  width: 60%;*/
+=======
 }
 
 .completedOpp {
@@ -63,9 +66,16 @@ html, body {
   z-index: 1;
   position: absolute;
   left: 40%;
+
 }
 
 /************************************************/
+#static-map {
+  display: block;
+  top: 0%;
+  height: 200px;
+  width: 400px;
+}
 
 #map {
   display: block;
@@ -185,16 +195,17 @@ body{
 
 .medalContainerOuter {
   display: block;
-  width: 100%;
-  height: 87vh;
-  margin-top: 5vh;
+  height: 25vh;
+  margin-top: 1vh;
+  float: right;
 }
 
 .medalContainerInner {
   display: block;
   color: white;
-  height: 10vh;
-  margin: 0 auto 4vh auto;
+  height: 5vh;
+  width: 20vh;
+  margin: 0 auto 0 auto;
   font-size: 2em;
   vertical-align: middle;
 }
@@ -227,9 +238,10 @@ body{
 }
 
 .total {
-  font-size: 2em;
+  font-size: 1.5em;
   color: black;
   text-align: center;
+  padding-top: 5px;
 }
 
 .titleMessage {
@@ -328,6 +340,7 @@ body{
   visibility: hidden;
 }
 
+
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
     border: 2px solid white;
     background-color: white;
@@ -353,7 +366,6 @@ body{
   margin-right: 1em; 
 }
 
-
 /******** Friend Dropdown ***********/
 .activeFriendIcon {
   color: rgb(62, 243, 86);
@@ -363,7 +375,6 @@ body{
   margin-top: 4.4em;
   width: 15em !important;
 }
-
 
 .smallButton {
   font-size: 0.85em;
@@ -392,6 +403,15 @@ body{
   height: 4.5em ;
 }
 
+
+/******** Home Button ***********/
+.bottom-align {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;
+}
+
 /************ Friend List **************/
 .friendListContainer {
   width: 23em;
@@ -400,8 +420,5 @@ body{
 .redBackground {
   background-color: rgba(255, 125, 110, 0.6) !important;
 }
-
-
-
 
 

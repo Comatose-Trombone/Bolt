@@ -7,6 +7,7 @@ angular.module('run.controller', [])
   $scope.userLocation;
   $scope.destination;
   $scope.hasHours = true;
+  $scope.nameRun = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
 
@@ -73,18 +74,22 @@ angular.module('run.controller', [])
 
     var date = new Date();
     console.log("initial loc", $scope.initialLoc);
+    console.log("dest", $scope.destination);
+    console.log("totaldistanceee", $scope.totalDistance);
     var endLocation = {
       latitude: $scope.destination.lat,
-      longitude: $scope.destination.long
+      longitude: $scope.destination.lng
     };
     var googleExpectedTime = null;
     var actualTime = runTime;
 
     var currentRunObject = {
+      name: "",
       date: date,
+      totalDistance: $scope.totalDistance,
       startLocation: $scope.initialLoc,
       endLocation: {
-        longitude: $scope.destination.long,
+        longitude: $scope.destination.lng,
         latitude: $scope.destination.lat
       },
       googleExpectedTime: null,
@@ -96,8 +101,10 @@ angular.module('run.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
+      var number = user.runs.length+1;
       var achievements = user.achievements;
       var previousRuns = user.runs;
+      currentRunObject.name = "Route " + number;
       //update achievments object
       achievements[medal] = achievements[medal] + 1;
       $window.localStorage.setItem('achievements', JSON.stringify(achievements));
