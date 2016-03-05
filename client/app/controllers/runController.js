@@ -112,7 +112,7 @@ angular.module('run.controller', [])
         achievements: achievements,
         runs: previousRuns
       };
-      Profile.updateUser(updatedAchievementsData, user.username)
+      Profile.updateUserInfo(updatedAchievementsData, user.username)
       .then(function (updatedProfile) {
         return updatedProfile;
       })
