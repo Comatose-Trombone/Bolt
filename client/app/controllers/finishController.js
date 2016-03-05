@@ -16,4 +16,11 @@ angular.module('finish.controller', [])
     $window.localStorage.setItem('challengeEndLat', "");
     $window.localStorage.setItem('challengeEndLng', "");
 
+    if ( window.localStorage.lostRace ) {
+      $scope.endMessage = "Nice Try!";
+      window.localStorage.lostRace = false;
+    } else {
+      $scope.endMessage = "Congrats!";
+      window.localStorage.lostRace = false;
+    }
 });

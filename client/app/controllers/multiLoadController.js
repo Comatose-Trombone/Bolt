@@ -51,6 +51,8 @@ angular.module('multiload.controller', ['bolt.profile'])
       var bool = false;
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
+      console.log(session);
+      console.log('key', session.friendOpponent === "");
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
           bool = true;
@@ -71,7 +73,10 @@ angular.module('multiload.controller', ['bolt.profile'])
         $interval.cancel(stop);
         geoQuery.cancel();
 
-        MultiGame.makeGame(id);
+        MultiGame.makeGame(id)
+        .then(function (game) {
+          console.log('game', game);
+        })
         session.gameId = id;
         session.competitor = key;
         session.multiLat = destinationLat;

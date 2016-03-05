@@ -1,6 +1,8 @@
 angular.module('multirun.controller', [])
 
 .controller('MultiRunController', function ($scope, $window, $timeout, $interval, $location, $route, Geo, Run, Profile, MultiGame) {
+  $scope.currentMedal = 'gold';
+
   var session = $window.localStorage;
   var raceFinished = false;
   $scope.userLocation;
@@ -51,7 +53,6 @@ angular.module('multirun.controller', [])
   $scope.checkUserCancelled = function () {
     MultiGame.getGame(session.gameId)
       .then(function (game) {
-        console.log('game: ', game);
         if (game.cancelled) {
           MultiGame.removeGame(session.gameId);
           if (stopCheck !== undefined) {
@@ -173,7 +174,13 @@ angular.module('multirun.controller', [])
     // Multiplayer
     if ($scope.oppFinished) {
       // Remove game from database if both players have finished
+      console.log('your opponent won! nice try.');
       MultiGame.removeGame(session.gameId);
+
+      // set a lost = true on window.localStorage
+      $window.localStorage.setItem('lostRace', true);
+      $location.path('/finish');
+
     } else {
       // Set won state to true if current user finishes first
       MultiGame.updateGame(session.gameId, 'won');
