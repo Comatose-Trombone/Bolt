@@ -4,27 +4,34 @@ angular.module('challengerun.controller', [])
   function ($scope, $timeout, $interval, $window,
             $location, $route, soloChallenge, Run, Profile, Geo) {
 
-  // Hard-coded for now
-  $scope.initialLocation = {
-    lat: 37.7789,
-    lng: -122.422
+  $scope.session = $window.localStorage;
+  $scope.initialLoc = {
+    lat: $scope.session.challengeStartLat,
+    lng: $scope.session.challengeStartLng
   };
   $scope.userLocation;
   $scope.destination = {
-    lat: 37.7837,
-    lng: -122.4092
+    lat: $scope.session.challengeEndLat,
+    lng: $scope.session.challengeEndLng
   };
+  $scope.raceStarted;
+
+  console.log($scope.session);
 
   $scope.hasHours = true;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
 
+  var withinRangeOfStartPoint = false;
   var startTime;
   var runTime;
   var statusUpdateLoop;
   var startLat;
   var startLong;
   var FINISH_RADIUS = 0.0002;
+  var START_RADIUS = 0.0002;
+
+  checkIfUserNearStart = $interval(checkNearStartPoint, 300);
 
   // Update run timer
   var updateTotalRunTime = function () {
@@ -32,49 +39,26 @@ angular.module('challengerun.controller', [])
     runTime = moment().minute(0).second(secondsRan);
   };
 
-  // !!!!!!!!REFACTORING TO WORK FOR SOLO CHALLENGE!!!!!!!!! TODO: Add challengeRun html page
-
-  // // Define waiting messages for the user while Google maps loads...
-  // var messages = [
-  //   "Finding the best route for you",
-  //   "Scanning the streets",
-  //   "Charging runtime engine",
-  //   "Looking into the eye of the tiger"
-  // ];
-
-  // var setRunMessage = function () {
-  //   $scope.runMessage = messages[Math.floor(Math.random() * messages.length)] + "...";
-  // };
-
-  // // Display random waiting message
-  // $interval(setRunMessage, Math.random() * 1000, messages.length);
-
+  // Start the race: starts race timer and update loop
   $scope.startRun = function () {
-    // Simulate finishing run for manual testing
-    // setTimeout(finishRun, 4000); // simulate finishing run for manual testing
-    startTime = moment();
-    $scope.raceStarted = true;
-    statusUpdateLoop = $interval(updateStatus, 300);
-    Run.setPointsInTime($scope);
-    Run.setInitialMedalGoal($scope);
-    document.getElementById('map').style.height = "80vh";
-    document.getElementById('botNav').style.height = "20vh";
+    if (withinRangeOfStartPoint) {
+      $interval.cancel(checkIfUserNearStart);
+      // Simulate finishing run for manual testing
+      // setTimeout(finishRun, 4000); // simulate finishing run for manual testing
+      startTime = moment();
+      $scope.raceStarted = true;
+      statusUpdateLoop = $interval(updateStatus, 300);
+      // Run.setPointsInTime($scope);
+      // Run.setInitialMedalGoal($scope);
+      document.getElementById('map').style.height = "80vh";
+      document.getElementById('botNav').style.height = "20vh";
+    } else {
+      // TODO: Add html that tells user they need to get closer to start point
+    }
   };
 
-  // // Generate a new map or route after initial map has been loaded
-  // $scope.regenRace = function () {
-  //   $route.reload();
-  // };
-
-  // Generates google map with current location marker and run route details
-  // var makeInitialMap = function () {
-  //   Geo.makeInitialMap($scope);
-  // };
-
-
+  // Generate map
   soloChallenge.makeInitialMap($scope, $scope.destination);
-
-
 
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
@@ -140,11 +124,20 @@ angular.module('challengerun.controller', [])
     }
   };
 
+  // Check if user is within range of starting point before allowing race to start, to ensure a fair race
+  var checkNearStartPoint = function () {
+    if ($scope.initialLoc && $scope.userLocation) {
+      var distRemaining = Geo.distBetween($scope.userLocation, $scope.initialLoc);
+      if (distRemaining < START_RADIUS) {
+        withinRangeOfStartPoint = true;
+      }
+    }
+  };
+
   // Update geographical location and timers. Update progress bar via calculating percentage total route completed.
   var updateStatus = function () {
     Geo.updateCurrentPosition($scope);
     updateTotalRunTime();
-    Run.updateGoalTimes($scope);
     checkIfFinished();
   };
 
@@ -152,5 +145,6 @@ angular.module('challengerun.controller', [])
   // Does this make sure to stop tracking if they close the window? --> all scripts die when the browser is no longer interpreting them
   $scope.$on('$destroy', function () {
     $interval.cancel(statusUpdateLoop);
+    $interval.cancel(checkIfUserNearStart);
   });
 });

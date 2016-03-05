@@ -63,8 +63,6 @@ angular.module('run.controller', [])
 
   makeInitialMap();
 
-
-
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
     $scope.$parent.runTime = runTime.format('mm:ss');
@@ -99,7 +97,7 @@ angular.module('run.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
-      var number = user.runs.length+1;
+      var number = user.runs.length + 1;
       var achievements = user.achievements;
       var previousRuns = user.runs;
       currentRunObject.name = "Route " + number;

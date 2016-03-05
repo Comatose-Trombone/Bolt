@@ -459,8 +459,6 @@ angular.module('bolt.services', [])
   return {
     submitLiveChallenge: submitLiveChallenge
   };
-<<<<<<< HEAD
-=======
 })
 
 .factory('soloChallenge', function ($http, $location, $window) {
@@ -517,15 +515,14 @@ angular.module('bolt.services', [])
     };
 
     makeMap({
-      lat: $scope.initialLocation.lat,
-      lng: $scope.initialLocation.lng
+      lat: $scope.initialLoc.lat,
+      lng: $scope.initialLoc.lng
     }, $scope);
   };
 
   return {
     makeInitialMap: makeInitialMap
   };
->>>>>>> Add challengeRunController and challengeRun html; Map renders properly when user loads a challenge run (with hard-coded location data);
 });
 
 

@@ -4,7 +4,15 @@ angular.module('bolt.challenges', [])
   $scope.challenges = [];
   $scope.session = $window.localStorage;
 
-  $scope.challengeRunStart = function () {
+  $scope.challengeRunStart = function (index) {
+    var challengeInfo = $scope.challenges[index];
+    console.log(challengeInfo);
+    $window.localStorage.setItem('challengeStartLat', challengeInfo.startLocation.lat);
+    $window.localStorage.setItem('challengeStartLng', challengeInfo.startLocation.lng);
+    $window.localStorage.setItem('challengeEndLat', challengeInfo.endLocation.lat);
+    $window.localStorage.setItem('challengeEndLng', challengeInfo.endLocation.lng);
+    $window.localStorage.setItem('timeToBeat', challengeInfo.actualTime);
+
     $location.path('/challengerun');
   };
 
