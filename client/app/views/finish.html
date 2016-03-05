@@ -11,10 +11,18 @@
 
 <!-- The runTime and achievement variables are set in the RunController upon finishing a run, using $scope.$parent. Since we are no longer nesting controllers, these variables are likely defined on $rootScope -->
 <div class="congrats">
-   <p>Congrats!</p>
-   <p> Your run time: {{ runTime }}</p>
-   <p style="margin-top:5vh">Medal earned </p>
-   <img src="../assets/{{achievement.toLowerCase()}}.png" height="90px" width="auto" />
+   <p ng-show="!challengeRace || winner">Congrats!</p>
+   <p ng-show="!winner">Oh no...</p>
+
+   <p ng-show="!challengeRace"> Your run time: {{ $scope.runTime }}</p>
+   <p style="margin-top:5vh" ng-show="!challengeRace">Medal earned </p>
+   <img ng-show="!challengeRace" src="../assets/{{achievement.toLowerCase()}}.png" height="90px" width="auto" />
+
+   <p style="margin-top:5vh" ng-show="challengeRace && winner">You won the challenge!</p>
+   <img ng-show="challengeRace && winner" src="../assets/Trophymedal.png" height="90px" width="auto" />
+
+   <p style="margin-top:5vh" ng-show="challengeRace && !winner">You lost the challenge</p>
+   <img ng-show="challengeRace && !winner" src="../assets/failure.png" height="90px" width="auto" />
 </div>
 <br><br><br><br>
 <div class="container profile center-align">

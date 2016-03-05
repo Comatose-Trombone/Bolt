@@ -2,7 +2,7 @@ angular.module('challengerun.controller', [])
 
 .controller('challengeRunController',
   function ($scope, $timeout, $interval, $window,
-            $location, $route, soloChallenge, Run, Profile, Geo) {
+            $location, $route, $rootScope, soloChallenge, Run, Profile, Geo) {
 
   $scope.session = $window.localStorage;
   $scope.timeToBeat = $scope.session.timeToBeat;
@@ -74,14 +74,13 @@ angular.module('challengerun.controller', [])
     // Determine if user won challenge by comparing their total time with the time to beat
     var challengeWon = totalTimeInSeconds <= timeToBeatInSeconds;
 
-    console.log(totalTimeArray);
-    console.log(timeToBeatArray);
-    console.log(challengeWon);
+    $rootScope.challengeWinner = true;
     var medal = challengeWon ? 'Trophy' : null;
 
     var date = new Date();
 
     var currentRunObject = {
+      name: "",
       date: date,
       startLocation: {
         latitude: $scope.initialLoc.lat,
@@ -99,6 +98,8 @@ angular.module('challengerun.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
+      var number = user.runs.length + 1;
+      currentRunObject.name = "Route " + number;
       var achievements = user.achievements;
       var previousRuns = user.runs;
       //update achievments object
