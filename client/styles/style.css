@@ -152,6 +152,10 @@ body{
   margin-top: auto;
 }
 
+.timeToBeat {
+  display: block;
+}
+
 .left {
   position: relative;
   float: left;

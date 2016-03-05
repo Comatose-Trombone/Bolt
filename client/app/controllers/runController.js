@@ -10,6 +10,8 @@ angular.module('run.controller', [])
   $scope.nameRun = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
+  $scope.currentLocMarker;
+
 
   var startTime;
   var runTime;
@@ -112,7 +114,6 @@ angular.module('run.controller', [])
       };
       Profile.updateUser(updatedAchievementsData, user.username)
       .then(function (updatedProfile) {
-        console.log("updatedProfileis" , updatedProfile);
         return updatedProfile;
       })
       .catch(function (err) {
@@ -128,11 +129,10 @@ angular.module('run.controller', [])
   var checkIfFinished = function () {
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
-      if (distRemaining < 2) {
-
+      // if (distRemaining < FINISH_RADIUS) {
         finishRun();
-      }
-    }
+      // }
+    };
   };
 
   // Update geographical location and timers. Update progress bar via calculating percentage total route completed.

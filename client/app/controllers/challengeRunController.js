@@ -5,6 +5,7 @@ angular.module('challengerun.controller', [])
             $location, $route, soloChallenge, Run, Profile, Geo) {
 
   $scope.session = $window.localStorage;
+  $scope.timeToBeat = $scope.session.timeToBeat;
   $scope.initialLoc = {
     lat: $scope.session.challengeStartLat,
     lng: $scope.session.challengeStartLng
@@ -15,17 +16,17 @@ angular.module('challengerun.controller', [])
     lng: $scope.session.challengeEndLng
   };
   $scope.raceStarted;
+  $scope.runTime = 0;
 
   console.log($scope.session);
 
-  $scope.hasHours = true;
+  $scope.hasHours = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
   // $scope.inRange = true;
 
-  var withinRangeOfStartPoint = false;
+  var withinRangeOfStartPoint = true;
   var startTime;
-  var runTime;
   var statusUpdateLoop;
   var startLat;
   var startLong;
@@ -37,7 +38,7 @@ angular.module('challengerun.controller', [])
   // Update run timer
   var updateTotalRunTime = function () {
     var secondsRan = moment().diff(startTime, 'seconds');
-    runTime = moment().minute(0).second(secondsRan);
+    $scope.runTime = moment().minute(0).second(secondsRan);
   };
 
   // Start the race: starts race timer and update loop
@@ -64,16 +65,14 @@ angular.module('challengerun.controller', [])
 
   // Handle end run conditions. Update user profile to reflect latest run.
   var finishRun = function () {
-    $scope.$parent.runTime = runTime.format('mm:ss');
+    var challengeWon = $scope.runTime <= $scope.timeToBeat;
     var medal = $scope.$parent.achievement = $scope.currentMedal;
 
     var date = new Date();
-    console.log("initial loc", $scope.initialLoc);
     var endLocation = {
       latitude: $scope.destination.lat,
       longitude: $scope.destination.long
     };
-    var googleExpectedTime = null;
     var actualTime = runTime;
 
     var currentRunObject = {
@@ -138,7 +137,7 @@ angular.module('challengerun.controller', [])
 
   // Update geographical location and timers. Update progress bar via calculating percentage total route completed.
   var updateStatus = function () {
-    Geo.updateCurrentPosition($scope);
+    soloChallenge.updateCurrentPosition($scope);
     updateTotalRunTime();
     checkIfFinished();
   };
