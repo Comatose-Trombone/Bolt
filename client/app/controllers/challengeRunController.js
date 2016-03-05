@@ -1,13 +1,21 @@
-angular.module('run.controller', [])
+angular.module('challengerun.controller', [])
 
-.controller('RunController',
+.controller('challengeRunController',
   function ($scope, $timeout, $interval, $window,
-            $location, $route, Geo, Run, Profile) {
-  $scope.initialLocation;
+            $location, $route, soloChallenge, Run, Profile, Geo) {
+
+  // Hard-coded for now
+  $scope.initialLocation = {
+    lat: 37.7789,
+    lng: -122.422
+  };
   $scope.userLocation;
-  $scope.destination;
+  $scope.destination = {
+    lat: 37.7837,
+    lng: -122.4092
+  };
+
   $scope.hasHours = true;
-  $scope.nameRun = false;
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
 
@@ -16,7 +24,7 @@ angular.module('run.controller', [])
   var statusUpdateLoop;
   var startLat;
   var startLong;
-  var FINISH_RADIUS = 0.0002; // miles?
+  var FINISH_RADIUS = 0.0002;
 
   // Update run timer
   var updateTotalRunTime = function () {
@@ -24,20 +32,22 @@ angular.module('run.controller', [])
     runTime = moment().minute(0).second(secondsRan);
   };
 
-  // Define waiting messages for the user while Google maps loads...
-  var messages = [
-    "Finding the best route for you",
-    "Scanning the streets",
-    "Charging runtime engine",
-    "Looking into the eye of the tiger"
-  ];
+  // !!!!!!!!REFACTORING TO WORK FOR SOLO CHALLENGE!!!!!!!!! TODO: Add challengeRun html page
 
-  var setRunMessage = function () {
-    $scope.runMessage = messages[Math.floor(Math.random() * messages.length)] + "...";
-  };
+  // // Define waiting messages for the user while Google maps loads...
+  // var messages = [
+  //   "Finding the best route for you",
+  //   "Scanning the streets",
+  //   "Charging runtime engine",
+  //   "Looking into the eye of the tiger"
+  // ];
 
-  // Display random waiting message
-  $interval(setRunMessage, Math.random() * 1000, messages.length);
+  // var setRunMessage = function () {
+  //   $scope.runMessage = messages[Math.floor(Math.random() * messages.length)] + "...";
+  // };
+
+  // // Display random waiting message
+  // $interval(setRunMessage, Math.random() * 1000, messages.length);
 
   $scope.startRun = function () {
     // Simulate finishing run for manual testing
@@ -51,17 +61,18 @@ angular.module('run.controller', [])
     document.getElementById('botNav').style.height = "20vh";
   };
 
-  // Generate a new map or route after initial map has been loaded
-  $scope.regenRace = function () {
-    $route.reload();
-  };
+  // // Generate a new map or route after initial map has been loaded
+  // $scope.regenRace = function () {
+  //   $route.reload();
+  // };
 
   // Generates google map with current location marker and run route details
-  var makeInitialMap = function () {
-    Geo.makeInitialMap($scope);
-  };
+  // var makeInitialMap = function () {
+  //   Geo.makeInitialMap($scope);
+  // };
 
-  makeInitialMap();
+
+  soloChallenge.makeInitialMap($scope, $scope.destination);
 
 
 
@@ -72,22 +83,18 @@ angular.module('run.controller', [])
 
     var date = new Date();
     console.log("initial loc", $scope.initialLoc);
-    console.log("dest", $scope.destination);
-    console.log("totaldistanceee", $scope.totalDistance);
     var endLocation = {
       latitude: $scope.destination.lat,
-      longitude: $scope.destination.lng
+      longitude: $scope.destination.long
     };
     var googleExpectedTime = null;
     var actualTime = runTime;
 
     var currentRunObject = {
-      name: "",
       date: date,
-      totalDistance: $scope.totalDistance,
       startLocation: $scope.initialLoc,
       endLocation: {
-        longitude: $scope.destination.lng,
+        longitude: $scope.destination.long,
         latitude: $scope.destination.lat
       },
       googleExpectedTime: null,
@@ -99,10 +106,8 @@ angular.module('run.controller', [])
     // Update current user's profile
     Profile.getUser()
     .then(function (user) {
-      var number = user.runs.length+1;
       var achievements = user.achievements;
       var previousRuns = user.runs;
-      currentRunObject.name = "Route " + number;
       //update achievments object
       achievements[medal] = achievements[medal] + 1;
       $window.localStorage.setItem('achievements', JSON.stringify(achievements));
@@ -130,7 +135,6 @@ angular.module('run.controller', [])
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
       if (distRemaining < FINISH_RADIUS) {
-
         finishRun();
       }
     }

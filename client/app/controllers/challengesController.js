@@ -1,21 +1,26 @@
 angular.module('bolt.challenges', [])
 
 .controller('challengesController', function ($scope, $location, $window, $http) {
-	$scope.challenges = [];
+  $scope.challenges = [];
   $scope.session = $window.localStorage;
 
-	var fetchChallenges = function(username) {
-		return $http({
-		  method: 'POST',
-		  url: '/api/users/challenges',
-		  data: {
-		    username: username,
-		  }
-		})
-		.then( function (res) {
-			$scope.challenges = res.data;
-		})
-	}
+  $scope.challengeRunStart = function () {
+    $location.path('/challengerun');
+  };
 
-	fetchChallenges($scope.session.username);
+  // TODO: update backend route to use general use function
+  var fetchChallenges = function (username) {
+    return $http({
+      method: 'POST',
+      url: '/api/users/challenges',
+      data: {
+        username: username
+      }
+    })
+    .then( function (res) {
+      $scope.challenges = res.data;
+    });
+  };
+
+  fetchChallenges($scope.session.username);
 });

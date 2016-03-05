@@ -26,9 +26,8 @@ angular.module('bolt.services', [])
     navigator.geolocation.getCurrentPosition(function (position) {
       $scope.initialLoc = {
         latitude: position.coords.latitude,
-        longitude : position.coords.longitude
+        longitude: position.coords.longitude
       };
-      console.log($scope.initialLoc);
 
         makeMap({
           lat: position.coords.latitude,
@@ -450,7 +449,7 @@ angular.module('bolt.services', [])
         user: user,
         opponent: opponent
       }
-    }).then(function (res) {
+    }).then( function (res) {
       return res;
     });
   };
@@ -460,6 +459,73 @@ angular.module('bolt.services', [])
   return {
     submitLiveChallenge: submitLiveChallenge
   };
+<<<<<<< HEAD
+=======
+})
+
+.factory('soloChallenge', function ($http, $location, $window) {
+  var session = $window.localStorage;
+  var mainMap;
+  var currentLocMarker;
+  var destinationMarker;
+  var directionsService = new google.maps.DirectionsService();
+  var directionsRenderer = new google.maps.DirectionsRenderer();
+  var route;
+  var initialLat;
+  var initialLng;
+
+
+  // Math functions
+  var sqrt = Math.sqrt;
+  var floor = Math.floor;
+  var random = Math.random;
+  var pow2 = function (num) {
+    return Math.pow(num, 2);
+  };
+
+  // Create map around the users current location and their destination
+  var makeInitialMap = function ($scope, destination) {
+    var makeMap = function (currentLatLngObj, $scope) {
+          //create a map within the div with the id 'map'
+      mainMap = new google.maps.Map(document.getElementById('map'), {
+        center: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
+        zoom: 13,
+        disableDefaultUI: true
+      });
+      //get the directions
+      directionsRenderer.setMap(mainMap);
+      //put down marker
+      currentLocMarker = new google.maps.Marker({
+        // TODO: Change this to user's current location, along with center for mainMap, to validate user's starting point of run
+        position: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
+        map: mainMap,
+        animation: google.maps.Animation.DROP,
+        icon: '/assets/bolt.png'
+      });
+      //set the start/end routes, based on the current location and the destination
+      var startOfRoute = new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng);
+      var endOfRoute = new google.maps.LatLng(destination.lat, destination.lng);
+      route = directionsService.route({
+        origin: startOfRoute,
+        destination: endOfRoute,
+        travelMode: google.maps.TravelMode.WALKING,
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
+        provideRouteAlternatives: false
+      }, function (response, status) {
+        directionsRenderer.setDirections(response);
+      });
+    };
+
+    makeMap({
+      lat: $scope.initialLocation.lat,
+      lng: $scope.initialLocation.lng
+    }, $scope);
+  };
+
+  return {
+    makeInitialMap: makeInitialMap
+  };
+>>>>>>> Add challengeRunController and challengeRun html; Map renders properly when user loads a challenge run (with hard-coded location data);
 });
 
 
