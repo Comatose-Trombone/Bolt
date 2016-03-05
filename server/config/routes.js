@@ -57,7 +57,6 @@ module.exports = function (app, express) {
 
   // Route to handle fetching user's current list of challenges
   app.post('/api/users/challenges', userController.fetchChallenges);
-  
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler
   app.use(helpers.errorLogger);

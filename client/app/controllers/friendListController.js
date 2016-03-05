@@ -35,7 +35,7 @@ angular.module('bolt.friendList', [])
       console.log('you must choose a friend first');
     } else {
 
-      };
+    }
 
 
 
