@@ -335,7 +335,6 @@ module.exports = {
   updateUserInfo: function (req, res, next) {
     var username = req.body.username;
     var newInfo = req.body.newInfo;
-    console.log(req.body);
     User.findOneAndUpdate(
       {username: username},
       newInfo,
