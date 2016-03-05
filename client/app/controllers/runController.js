@@ -82,7 +82,7 @@ angular.module('run.controller', [])
       totalDistance: $scope.totalDistance,
       startLocation: {
         latitude: $scope.initialLoc.latitude,
-        longitude: $scope.initialLoc.latitude
+        longitude: $scope.initialLoc.longitude
       },
       endLocation: {
         longitude: $scope.destination.lng,
@@ -110,8 +110,9 @@ angular.module('run.controller', [])
         achievements: achievements,
         runs: previousRuns
       };
-      Profile.updateUser(updatedAchievementsData, user)
+      Profile.updateUser(updatedAchievementsData, user.username)
       .then(function (updatedProfile) {
+        console.log("updatedProfileis" , updatedProfile);
         return updatedProfile;
       })
       .catch(function (err) {
@@ -127,7 +128,7 @@ angular.module('run.controller', [])
   var checkIfFinished = function () {
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
-      if (distRemaining < FINISH_RADIUS) {
+      if (distRemaining < 2) {
 
         finishRun();
       }

@@ -2,8 +2,13 @@
 angular.module('achievements.controller', [])
   .controller('AchievementsController', function ($scope, $window, Profile) {
     var session = $window.localStorage;
-    var medals = JSON.parse(session.achievements);
-    $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
+    
+    if (session.achievements === undefined) {
+      $scope.total = 0;
+    } else {
+      var medals = JSON.parse(session.achievements);
+      $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'] + medals['Trophy'];
+    };
     $scope.runs;
     $scope.showDetails = false;
     $scope.theRun;
@@ -14,6 +19,7 @@ angular.module('achievements.controller', [])
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     var route;
+    var medalCounts=[];
     // Use numeric strings for medal counts to display in d3
     var makeStaticMap = function (run) {
       var startLoc = run.startLocation;
@@ -50,13 +56,19 @@ angular.module('achievements.controller', [])
     $scope.sendChallenge = function(run) {
       Profile.sendChallengeRequest(run, $scope);
     };
-
-    var medalCounts = [
+    
+    
+    if ($scope.total === 0) {
+      medalCounts = [0,0,0,0,0];
+    } else {
+     medalCounts = [
       medals['Gold'].toString(),
       medals['Silver'].toString(),
       medals['Bronze'].toString(),
-      medals['High Five'].toString()
+      medals['High Five'].toString(),
+      medals['Trophy'].toString()
     ];
+    };
     //Gets the user's run
      $scope.getUserRun = function () {
       Profile.getUser()
