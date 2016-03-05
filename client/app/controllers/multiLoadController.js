@@ -57,6 +57,7 @@ angular.module('multiload.controller', ['bolt.profile'])
       console.log(session.friendOpponent);
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
+          console.log('hello');
           bool = true;
         }
       } else {
