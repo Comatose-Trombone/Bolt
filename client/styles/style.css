@@ -39,6 +39,9 @@ html, body {
   display: inline;
   float: left;
   height: 100%;
+<<<<<<< HEAD
+/*  width: 60%;*/
+=======
 }
 
 .completedOpp {
@@ -63,9 +66,16 @@ html, body {
   z-index: 1;
   position: absolute;
   left: 40%;
+>>>>>>> 2f34b05abb66ff2f14ff137b662c71bc3188fab3
 }
 
 /************************************************/
+#static-map {
+  display: block;
+  top: 0%;
+  height: 200px;
+  width: 400px;
+}
 
 #map {
   display: block;
@@ -185,16 +195,17 @@ body{
 
 .medalContainerOuter {
   display: block;
-  width: 100%;
-  height: 87vh;
-  margin-top: 5vh;
+  height: 25vh;
+  margin-top: 1vh;
+  float: right;
 }
 
 .medalContainerInner {
   display: block;
   color: white;
-  height: 10vh;
-  margin: 0 auto 4vh auto;
+  height: 5vh;
+  width: 20vh;
+  margin: 0 auto 0 auto;
   font-size: 2em;
   vertical-align: middle;
 }
@@ -227,9 +238,10 @@ body{
 }
 
 .total {
-  font-size: 2em;
+  font-size: 1.5em;
   color: black;
   text-align: center;
+  padding-top: 5px;
 }
 
 .titleMessage {
@@ -328,6 +340,7 @@ body{
   visibility: hidden;
 }
 
+
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
     border: 2px solid white;
     background-color: white;
@@ -345,6 +358,8 @@ body{
   margin-right: 1em;
 }
 
+<<<<<<< HEAD
+=======
 .whiteOfflineCircle {
   background-color: rgba(0,0,0,0.5);
   border-radius: 99em;
@@ -352,6 +367,7 @@ body{
   height: 0.6em;
   margin-right: 1em; 
 }
+>>>>>>> 2f34b05abb66ff2f14ff137b662c71bc3188fab3
 
 
 /******** Friend Dropdown ***********/
@@ -364,7 +380,10 @@ body{
   width: 15em !important;
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 2f34b05abb66ff2f14ff137b662c71bc3188fab3
 .smallButton {
   font-size: 0.85em;
   text-align: center;
@@ -391,6 +410,15 @@ body{
 }
 
 
+/******** Home Button ***********/
+.bottom-align {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;
+}
+
+
 
 /************ Friend List **************/
 .friendListContainer {
@@ -400,8 +428,5 @@ body{
 .redBackground {
   background-color: rgba(255, 125, 110, 0.6) !important;
 }
-
-
-
 
 
