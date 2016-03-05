@@ -10,11 +10,11 @@
   </div>
   </li>
 
-  <li class="friendRequestEntry valign-wrapper" ng-repeat='challenger in challengeList track by $index'>
+  <li class="friendRequestEntry valign-wrapper" ng-repeat='opponent in challengeList track by $index'>
   <div class='friendRequestEntryContent'>
-  <span class="smallButton">{{challenger}} wants to race! </span><br>
-  <span class="smallButton options" ng-click="handleLiveChallengeRequest('accept', challenger)">Accept</span>
-  <span class="smallButton options" ng-click="handleLiveChallengeRequest('reject', challenger)">Reject</span>
+  <span class="smallButton">{{opponent}} wants to race! </span><br>
+  <span class="smallButton options" ng-click="handleLiveChallengeAccept(opponent)">Accept</span>
+  <span class="smallButton options" ng-click="handleLiveChallengeReject(opponent)">Reject</span>
   </div>
   </li>
 

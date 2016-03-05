@@ -26,12 +26,13 @@ angular.module('multiload.controller', ['bolt.profile'])
   var bool;
 
   var checkIfFriendCancel = function () {
-    // query DB
-    // check the status on
     Profile.getUser(session.username)
     .then(function (user) {
+      console.log('currentChallenge', user.currentChallenge);
+      // listen if the other user cancelled/rejected. if so, cancel the search.
       if ( user.currentChallenge.cancel ) {
-        $window.localStorage.removeItem("friendOpponent");
+      // NOTE: you do NOT need to change the cancel status back to false. This is done when you
+      // send a challenge request, or when you accept one.
         cancelSearch();
       }
     });
@@ -52,6 +53,8 @@ angular.module('multiload.controller', ['bolt.profile'])
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
+      console.log('key,', key);
+      console.log(session.friendOpponent);
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
           bool = true;
@@ -116,7 +119,25 @@ angular.module('multiload.controller', ['bolt.profile'])
   };
 
   var cancelSearch = function () {
+    // updates the opponent's profile, setting their current match status cancel to true
+    // this is necessary when both players are queued, but one player leaves. Must
+    // notiffy the other player.
+
+    var currentChallenge = {
+      opponent: session.username,
+      match: false,
+      cancel: true
+    };
+    var updateUserInfo = {
+      $set: { currentChallenge: currentChallenge }
+    };
+    Profile.updateUserInfo(updateUserInfo, session.opponent);
+    $window.localStorage.removeItem("friendOpponent");
+
     $location.path('/bolt');
+
+    // if two users are loading, and one cancels, it should alert the other person that there was a cancellation.
+    // update user
   };
 
   return {

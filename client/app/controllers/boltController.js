@@ -61,16 +61,11 @@ angular.module('bolt.controller', [])
     });
   };
 
-  $scope.handleLiveChallengeRequest = function (action, opponent) {
+  $scope.handleLiveChallengeAccept = function (opponent) {
     var currentChallenge = {
-      challenger: "",
+      opponent: opponent,
       match: false,
       cancel: false };
-    // edit the currentChallenge object in user
-    if ( action === 'accept' ) {
-      currentChallenge.match = true;
-      currentChallenge.challenger = opponent;
-    }
 
     var updateUser = {
       $pull: {challengeList: opponent},
@@ -79,12 +74,40 @@ angular.module('bolt.controller', [])
 
     Profile.updateUserInfo(updateUser, this.session.username)
     .then(function (data) {
-      if ( action === 'accept' ) {
-        window.localStorage.setItem("friendOpponent", opponent);
-        // $location.path("/multiLoad");
-      }
+      window.localStorage.setItem("friendOpponent", opponent);
+      $location.path("/multiLoad");
     });
   };
+
+  $scope.handleLiveChallengeReject = function (opponent) {
+    // edit the current user, delete from the challengeList
+    updateUser = {
+      $pull: {challengeList: opponent}
+    };
+
+    Profile.updateUserInfo(updateUser, this.session.username)
+    .then(function (data) {
+      console.log('you rejected the challenge.', data);
+    });
+
+    var currentChallenge = {
+      opponent: opponent,
+      match: false,
+      cancel: true };
+
+    // also update the opponent that you cancelled.
+    var updateOpponent = {
+      $set: { currentChallenge: currentChallenge }
+    };
+
+    Profile.updateUserInfo(updateOpponent, opponent)
+    .then(function (data) {
+      console.log('your opponent has been notified that you cancelled.', data);
+    });
+  };
+
+
+
 
   $scope.$on('$destroy', function () {
     $interval.cancel(checkFriendRequestsInterval);
