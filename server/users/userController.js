@@ -291,6 +291,20 @@ module.exports = {
       });
     }
   },
+  sendChallengeRequest: function (req,res,next) {
+    console.log("request is", req.body.run);
+    findUser({username: req.body.username})
+    .then( function(user) {
+      if (user) {
+        console.log("user is", user);
+
+      user.challenges.push(req.body.run)
+      user.save();
+      } else {
+        res.send(404)
+      }
+    })
+  },
 
   submitLiveChallenge: function (req, res, next) {
     console.log('submitLiveChallenge');
@@ -319,7 +333,7 @@ module.exports = {
         }
       });
     });
-  }
+  },
     // .then(function () {
       //find opponent and add a challenge
   

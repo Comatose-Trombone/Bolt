@@ -192,12 +192,17 @@ body{
   color: white;
   font-size: 2em;
 }
+.map {
+  display: block;
+  padding-top: 3vh;
 
+}
 .medalContainerOuter {
   display: block;
-  height: 25vh;
+  height: 10vh;
   margin-top: 1vh;
   float: right;
+  
 }
 
 .medalContainerInner {
@@ -358,8 +363,7 @@ body{
   margin-right: 1em;
 }
 
-<<<<<<< HEAD
-=======
+
 .whiteOfflineCircle {
   background-color: rgba(0,0,0,0.5);
   border-radius: 99em;
@@ -367,7 +371,7 @@ body{
   height: 0.6em;
   margin-right: 1em; 
 }
->>>>>>> 2f34b05abb66ff2f14ff137b662c71bc3188fab3
+
 
 
 /******** Friend Dropdown ***********/
@@ -380,10 +384,7 @@ body{
   width: 15em !important;
 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 2f34b05abb66ff2f14ff137b662c71bc3188fab3
 .smallButton {
   font-size: 0.85em;
   text-align: center;
@@ -409,7 +410,9 @@ body{
   font-size: 1em !important;
 }
 
-
+.sendSoloChallenge {
+  z-index: 5;
+}
 /******** Home Button ***********/
 .bottom-align {
    position:absolute;
