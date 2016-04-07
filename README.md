@@ -5,9 +5,9 @@ Find running partners with the click of a button. Race yourself, race your frien
 
 ## Team
 
-  - __Product Owner__: Shane McGraw
-  - __Scrum Master__: Elliot Plant
-  - __Development Team Members__: Kyle Corbelli, Erick Paepke
+  - __Product Owner__: Hazal Ozcan
+  - __Scrum Master__: Thomas Hoffmann
+  - __Development Team Members__: Daniel Wong, Josh Sheller
 
 ## Table of Contents
 
@@ -22,8 +22,6 @@ Find running partners with the click of a button. Race yourself, race your frien
 ## Usage
 
 Users can find running partners with a click of a button. The app will find a random place for the user to run and give them a goal time. If the user wants added incentive, the app will find her a running partner nearby and start them both off in a race towards a common finish line.
-
-For a visual map of how users can navigate through the app, take a look at the [storyboard diagram](Storyboard/storyboard.pdf)
 
 To get things going, run ```$ npm start```
 
@@ -56,8 +54,8 @@ For guidelines on how to deploy with Heroku and other insights into how and why 
 ### Roadmap
 
 There are plenty of ways to help make Bolt even better!
-View the project roadmap [here](https://github.com/boisterousSplash/Bolt/issues)
-For ideas on how to take bolt in your own direction, take a look at our [greenfield presentation](https://docs.google.com/presentation/d/1PT0igjQI0Gfa7LJU8H0g2XZlwMRzHeLlVOXDWMy0Jzk/edit?usp=sharing)
+View the project roadmap [here](https://github.com/Comatose-Trombone/Bolt/issues)
+
 
 
 ## Contributing
