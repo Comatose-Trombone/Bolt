@@ -49,8 +49,6 @@ $ npm install
 $ bower install
 ```
 
-For guidelines on how to deploy with Heroku and other insights into how and why we chose our tech stack, take a look at [stack.md](stack.md)
-
 ### Roadmap
 
 There are plenty of ways to help make Bolt even better!
