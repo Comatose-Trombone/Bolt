@@ -47,7 +47,6 @@ angular.module('bolt.profile', ['bolt.auth'])
   };
 
 
-
   getUserInfo();
 });
 

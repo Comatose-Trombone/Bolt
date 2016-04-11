@@ -6,39 +6,31 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   // This will be the mechanism by which profiles are created / updated. It
   // will set the new data to $scope (so it's accessible to other controllers)
   // and update the user in our Mongo DB
+  $scope.session = $window.localStorage;
+
   $scope.createProfile = function (inputData) {
-    console.log('inputdata', inputData);
-    $location.path('/profile');
-    newData = {
-      firstName: $scope.session.firstName,
-      lastName: $scope.session.lastName,
-      email: $scope.session.email,
-      phone: $scope.session.phone,
-      preferredDistance: $scope.session.preferredDistance
-    };
-    // Loop through the inputData object to update any new pieces of user info.
-    // If we didn't have this loop, the data in $scope would be stuck, getting
-    // read and written over by this function. Looping through makes updates
-    // possible.
 
-    for (var key in inputData) {
-      if (inputData.hasOwnProperty(key) && inputData[key]) {
-        newData[key] = inputData[key];
-        $window.localStorage.setItem(key, inputData[key]);
-      }
+    if (inputData.phone) {
+      // DB expects a number
+      inputData.phone = inputData.phone.replace(/[^0-9]/g, '');
     }
+    $location.path('/profile');
 
-    // Update the DB
-    Profile.getUser()
-    .then(function (currentUser) {
-      Profile.updateUser(newData, currentUser)
-      .catch(function (err) {
-        console.error(err);
-      });
+    var updateUser = {
+      $set: inputData
+    };
+
+    Profile.updateUserInfo(updateUser, this.session.username)
+    .then( function (data) {
+      for (var key in inputData) {
+        $window.localStorage.setItem(key, data.data[key]);
+      }
+    })
+    .catch( function (err) {
+      console.log('err', err);
     });
   };
 
-  $scope.session = $window.localStorage;
 
   // Give signout ability to $scope
   $scope.signout = function () {

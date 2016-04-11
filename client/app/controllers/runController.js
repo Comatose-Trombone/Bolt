@@ -42,6 +42,7 @@ angular.module('run.controller', [])
   $interval(setRunMessage, Math.random() * 1000, messages.length);
 
   $scope.startRun = function () {
+    console.log('start run called');
     // Simulate finishing run for manual testing
     // setTimeout(finishRun, 4000); // simulate finishing run for manual testing
     startTime = moment();
@@ -101,7 +102,8 @@ angular.module('run.controller', [])
     .then(function (user) {
       var number = user.runs.length + 1;
       var achievements = user.achievements;
-      var previousRuns = user.runs;
+      var p
+      reviousRuns = user.runs;
       currentRunObject.name = "Route " + number;
       //update achievments object
       achievements[medal] = achievements[medal] + 1;
@@ -129,9 +131,9 @@ angular.module('run.controller', [])
   var checkIfFinished = function () {
     if ($scope.destination && $scope.userLocation) {
       var distRemaining = Geo.distBetween($scope.userLocation, $scope.destination);
-      // if (distRemaining < FINISH_RADIUS) {
+      if (distRemaining < FINISH_RADIUS) {
         finishRun();
-      // }
+      }
     };
   };
 
@@ -148,4 +150,5 @@ angular.module('run.controller', [])
   $scope.$on('$destroy', function () {
     $interval.cancel(statusUpdateLoop);
   });
+
 });

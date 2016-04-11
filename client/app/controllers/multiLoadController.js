@@ -51,8 +51,6 @@ angular.module('multiload.controller', ['bolt.profile'])
       var bool = false;
       // need a check to see if friend has declined the request. if so, clean friendOpponent on session, and call cancelSearch.
       // In order to use the same function for friend-friend and friend-public matching, a bool value is used.
-      console.log(session);
-      console.log('key', session.friendOpponent === "");
       if ( session.friendOpponent !== "" ) {
         if ( key === session.friendOpponent ) {
           bool = true;
@@ -64,7 +62,6 @@ angular.module('multiload.controller', ['bolt.profile'])
       }
       if ( bool ) {
        var id = [session.username, key].sort().join('');
-        console.log('bool is true! ')
         // This calculation should be placed in a factory
         var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
         var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
@@ -89,7 +86,6 @@ angular.module('multiload.controller', ['bolt.profile'])
 
   // Create an area in which to search for other users
   var generateQuery = function () {
-    console.log('generate query');
     var geoQuery = geoFire.query({
       center: [userPosition.coords.latitude, userPosition.coords.longitude],
       // radius should be reduced to within the users desired distance

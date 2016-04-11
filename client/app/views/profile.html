@@ -14,19 +14,19 @@
   <ul class="collection">
     <li class="collection-item valign-wrapper">
       <i class="valign material-icons profile-icon">account_circle</i>
-      <p class="valign">{{ session.firstName }} {{session.lastName}}</p>
+      <p class="valign">{{ session.firstName || session.lastName ? session.firstName + " " + session.lastName : 'name'}}</p>
     </li>
     <li class="collection-item valign-wrapper">
       <i class="valign material-icons profile-icon">email</i>
-      <p class="valign">{{ session.email }}</p>
+      <p class="valign">{{ session.email ? session.email : 'email' }}</p>
     </li>
     <li class="collection-item valign-wrapper">
       <i class="valign material-icons profile-icon">phone</i>
-      <p class="valign">{{ session.phone }}</p>
+      <p class="valign">{{ session.phone ? session.phone : 'phone' }}</p>
     </li>
     <li class="collection-item valign-wrapper">
       <i class="valign material-icons profile-icon">trending_up</i>
-      <p class="valign">{{ session.preferredDistance }} miles</p>
+      <p class="valign">{{ session.preferredDistance ? session.preferredDistance : 1  }} miles</p>
     </li>
   </ul>
 </div>

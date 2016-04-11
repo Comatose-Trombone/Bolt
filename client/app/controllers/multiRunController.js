@@ -27,6 +27,10 @@ angular.module('multirun.controller', [])
   $scope.distanceRun = 0;
   $scope.percentComplete = 0;
   $scope.oppPercentComplete = 0;
+  setInterval(function() {
+    $scope.percentComplete++;
+    $scope.oppPercentComplete++;
+  }, 500);
   var stopCheck;
   var stopFinish;
   var statusUpdateLoop;
