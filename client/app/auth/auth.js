@@ -36,6 +36,7 @@ angular.module('bolt.auth', [])
       .then(function (token) {
         $window.localStorage.setItem('com.bolt', token);
         $window.localStorage.setItem('username', $scope.user.username);
+        $window.localStorage.setItem('preferredDistance', 1);
         $location.path('/createProfile');
       })
       .catch(function (error) {

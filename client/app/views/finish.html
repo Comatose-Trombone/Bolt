@@ -23,6 +23,10 @@
 
    <p style="margin-top:5vh" ng-show="challengeRace && !winner">You lost the challenge</p>
    <img ng-show="challengeRace && !winner" src="../assets/failure.png" height="90px" width="auto" />
+   <p>{{ endMessage }}</p>
+   <p> Your run time: {{ runTime }}</p>
+   <p style="margin-top:5vh">Medal earned </p>
+   <img src="../assets/{{achievement.toLowerCase()}}.png" height="90px" width="auto" />
 </div>
 <br><br><br><br>
 <div class="container profile center-align">

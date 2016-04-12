@@ -20,6 +20,9 @@ angular.module('achievements.controller', [])
     var directionsRenderer = new google.maps.DirectionsRenderer();
     var route;
     var medalCounts;
+
+    $scope.currentRouteName;
+
     // Use numeric strings for medal counts to display in d3
     var makeStaticMap = function (run) {
       var startLoc = run.startLocation;
@@ -48,6 +51,7 @@ angular.module('achievements.controller', [])
     };
 
     $scope.toggleShowDetails = function (run) {
+      $scope.currentRouteName = run.name;
       $scope.showDetails = !$scope.showDetails;
       $scope.theRun = run;
       makeStaticMap(run);
@@ -76,6 +80,7 @@ angular.module('achievements.controller', [])
       Profile.getUser()
       .then(function (user) {
         $scope.runs = user.runs;
+        $scope.toggleShowDetails($scope.runs[0]);
         console.log("$scope.runs are: ", $scope.runs);
       });
     };

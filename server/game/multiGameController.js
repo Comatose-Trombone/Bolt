@@ -12,6 +12,7 @@ module.exports = {
   // Check whether game is in database, if not then create game
   makeGame: function (req, res, next) {
     var id = req.body.id;
+    console.log('id', id);
     findGame({id: id}).then(function (game) {
       if (game) {
         res.send(201, game);

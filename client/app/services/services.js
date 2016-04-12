@@ -41,6 +41,7 @@ angular.module('bolt.services', [])
       var destinationCoordinates = destination ||
           randomCoordsAlongCircumference(currentLatLngObj, session.preferredDistance);
           //create a map within the div with the id 'map'
+      console.log('dest coords', destinationCoordinates);
       mainMap = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
         zoom: 13,
@@ -58,10 +59,13 @@ angular.module('bolt.services', [])
       //set the start/end routes, based on the current location and the destination
       var startOfRoute = new google.maps.LatLng($scope.currentLocMarker.position.lat(), $scope.currentLocMarker.position.lng());
       var endOfRoute = new google.maps.LatLng(destinationCoordinates.lat, destinationCoordinates.lng);
+
       $scope.destination = {
         lat: endOfRoute.lat(),
         lng: endOfRoute.lng()
       };
+
+      console.log('scope destination', $scope.destination);
 
       route = directionsService.route({
         origin: startOfRoute,
@@ -82,8 +86,8 @@ angular.module('bolt.services', [])
           }
           totalDistance += distance;
         }
-        console.log('tot distance .... ', totalDistance);
         totalDistance = parseFloat(totalDistance) || 0.1; // If run distance is small display 0.1 miles
+        console.log('tot distance .... ', totalDistance);
         $scope.totalDistance = totalDistance;
 
         // Change this to pull the users speed from their profile
@@ -116,6 +120,7 @@ angular.module('bolt.services', [])
 
   // Updates the current user position, and calculates the percentage of the total route completed.
   var updateCurrentPosition = function ($scope) {
+    console.log($scope.userLocation);
     if ($scope.userLocation) {
       var prevLocation = {
         lat: $scope.userLocation.lat,

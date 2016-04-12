@@ -62,7 +62,6 @@ angular.module('multiload.controller', ['bolt.profile'])
       }
       if ( bool ) {
        var id = [session.username, key].sort().join('');
-        console.log('bool is true! ')
         // This calculation should be placed in a factory
         var destinationLat = (userPosition.coords.latitude + location[0]) / 2;
         var destinationLng = (userPosition.coords.longitude + location[1]) / 2;
@@ -71,7 +70,10 @@ angular.module('multiload.controller', ['bolt.profile'])
         $interval.cancel(stop);
         geoQuery.cancel();
 
-        MultiGame.makeGame(id);
+        MultiGame.makeGame(id)
+        .then(function (game) {
+          console.log('game', game);
+        })
         session.gameId = id;
         session.competitor = key;
         session.multiLat = destinationLat;
@@ -84,7 +86,6 @@ angular.module('multiload.controller', ['bolt.profile'])
 
   // Create an area in which to search for other users
   var generateQuery = function () {
-    console.log('generate query');
     var geoQuery = geoFire.query({
       center: [userPosition.coords.latitude, userPosition.coords.longitude],
       // radius should be reduced to within the users desired distance
