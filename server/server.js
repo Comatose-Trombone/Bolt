@@ -6,16 +6,16 @@ var app = express();
 // Connect to local mongodb named "bolt"
 // Uncomment line 9 to use a local database
 // Be sure to re-comment line 9 when submitting PR
-// mongoose.connect('mongodb://localhost/bolt');
+mongoose.connect('mongodb://localhost/bolt');
 // ========================================
 
 // ========================================
 // Connect to mongolab database
 // Please replace this line with your own
 //  mongolab link
-var mongoURI = 'mongodb://heroku_2s3bpfqk:Thomas13@ds019638.mlab.com:19638/heroku_2s3bpfqk'
+// var mongoURI = 'mongodb://heroku_2s3bpfqk:Thomas13@ds019638.mlab.com:19638/heroku_2s3bpfqk'
 // var mongoURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/bolt';
-mongoose.connect(mongoURI);
+// mongoose.connect(mongoURI);
 // ========================================
 
 require('./config/middleware.js')(app, express);

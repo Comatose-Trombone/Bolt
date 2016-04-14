@@ -85,6 +85,8 @@ module.exports = {
     });
   },
 
+
+  // !!!!!!!!!!!!!!!!  Is this outdated??  !!!!!!!!!!!!!! //
   updateUser: function (req, res, next) {
     // This is tied to createProfile on the frontend, so users can update
     // their info
@@ -105,23 +107,26 @@ module.exports = {
           res.send(data);
         })
       } else {
-        next(new Error('No user found!'));
+        // next(new Error('No user found!'));
+        res.send(500);
       }
     })
     .fail(function (error) {
-      next(error);
+      // next(error);
+      res.send(500);
     });
   },
+
 
   getUser: function (req, res, next) {
     var token = req.headers['x-access-token'];
     if (!token) {
-      next(new Error('No token'));
+      res.send(500);
     } else {
       var user = jwt.decode(token, 'secret');
       findUser({username: user.username})
       .then(function (user) {
-        res.json(user);
+        res.send(200, user);
       })
       .catch(function (err) {
         console.error(err);
@@ -141,7 +146,7 @@ module.exports = {
         // change online to false and save
         user.online = false;
         user.save(function () {
-          res.send('Logged Out');
+          res.send(200);
         });
       })
       .catch(function (err) {
@@ -340,10 +345,11 @@ module.exports = {
   updateUserInfo: function (req, res, next) {
     var username = req.body.username;
     var newInfo = req.body.newInfo;
+    console.log(newInfo);
     User.findOneAndUpdate(
       {username: username},
       newInfo,
-      {safe: true})
+      {safe: true, new: true})
     .then(function (data) {
       console.log('data after updateUserInfo', data);
       res.send(data);
