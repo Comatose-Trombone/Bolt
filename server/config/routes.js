@@ -35,9 +35,6 @@ module.exports = function (app, express) {
   // Route to signout users
   app.get('/api/users/signout', userController.signout);
 
-  // Route to update user preferences and settings
-  app.put('/api/users/profile', userController.updateUser);
-
   // Route to submit friend request
   app.post('/api/users/friendRequest', userController.submitFriendRequest);
 

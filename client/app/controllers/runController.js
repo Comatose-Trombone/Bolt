@@ -102,8 +102,7 @@ angular.module('run.controller', [])
     .then(function (user) {
       var number = user.runs.length + 1;
       var achievements = user.achievements;
-      var p
-      reviousRuns = user.runs;
+      var previousRuns = user.runs;
       currentRunObject.name = "Route " + number;
       //update achievments object
       achievements[medal] = achievements[medal] + 1;

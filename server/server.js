@@ -13,8 +13,8 @@ mongoose.connect('mongodb://localhost/bolt');
 // Connect to mongolab database
 // Please replace this line with your own
 //  mongolab link
-// 'mongodb://heroku_2s3bpfqk:Thomas13@ds019638.mongolab.com:19638/heroku_2s3bpfqk'
-// mongoURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/bolt';
+// var mongoURI = 'mongodb://heroku_2s3bpfqk:Thomas13@ds019638.mlab.com:19638/heroku_2s3bpfqk'
+// var mongoURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/bolt';
 // mongoose.connect(mongoURI);
 // ========================================
 
