@@ -70,9 +70,6 @@ angular.module('multirun.controller', [])
           }
           $interval.cancel(checkCancelled);
           
-          // add a checker in here to see if race was finished, or cancelled.
-          console.log('pathing to bolt');
-
 
           $location.path('/');
         }
@@ -178,7 +175,6 @@ angular.module('multirun.controller', [])
     // Multiplayer
     if ($scope.oppFinished) {
       // Remove game from database if both players have finished
-      console.log('your opponent won! nice try.');
       MultiGame.removeGame(session.gameId);
 
       // set a lost = true on window.localStorage
@@ -286,7 +282,6 @@ angular.module('multirun.controller', [])
   // Does this make sure to stop tracking if they close the window? --> all scripts die when the browser is no longer interpreting them
 
   $scope.$on('$destroy', function () {
-    console.log('DESTROYED!!!!!!');
     $scope.raceCancelledOrFinished();
   });
 });
