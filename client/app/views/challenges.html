@@ -8,13 +8,17 @@
   </div>
 </nav>
 
-<div class="titleMessage">Challenges</div>
 
 <div class="container" ng-show = "challengeShow">
+  <div class="titleMessage">Challenges</div>
   <ul class="collection">
     <li class="collection-item valign-wrapper" ng-repeat='challenge in challenges track by $index'>
       <h6 class="valign">   You have a challenge from : {{ challenge.friend }},    Distance : {{challenge.totalDistance}},    Time to Beat : {{challenge.actualTime.slice(14,22)}}</h6>
       <input class = "accept btn waves-effect waves-light" type="submit" value="Accept" ng-click="challengeRunStart($index)"/>
     </li>
   </ul>
+</div>
+
+<div class="container" ng-show = "!challengeShow">
+  <div class="titleMessage"> You have no current challenges </div>
 </div>
