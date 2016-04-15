@@ -13,7 +13,7 @@ var app = express();
 // Connect to mongolab database
 // Please replace this line with your own
 //  mongolab link
-var mongoURI = 'mongodb://heroku_9qz2s9d9:Thomas13@ds011331.mlab.com:11331/heroku_9qz2s9d9'
+var mongoURI = 'mongodb://ComotoseTrombone:HR38@ds011331.mlab.com:11331/heroku_9qz2s9d9'
 // var mongoURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/bolt';
 mongoose.connect(mongoURI);
 // ========================================
