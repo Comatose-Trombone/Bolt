@@ -3,6 +3,8 @@
 Running is fun again.
 Find running partners with the click of a button. Race yourself, race your friends, and meet new people to run with.
 
+Check out the deployed application [here](https://thawing-harbor-17678.herokuapp.com/#/)!
+
 ## Team
 
   - __Product Owner__: Hazal Ozcan
